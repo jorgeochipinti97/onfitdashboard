@@ -4,19 +4,20 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Importa los estilos CSS de React Quill
 
 const ProductForm = ({ existingProduct }) => {
-  const [imagesArray, setImagesArray] = useState([]);
+  const [imagesArray, setImagesArray] = useState(existingProduct?.images || []);
   const [categoria, setCategoria] = useState(existingProduct?.categoria || "");
+  const [sku, setSku] = useState(existingProduct?.sku || "");
   const [subcategoria, setSubcategoria] = useState(
     existingProduct?.subcategoria || ""
   );
   const [descripcion, setDescripcion] = useState(
     existingProduct?.descripcion || ""
   );
-  const [slug, setSlug] = useState("");
+  const [slug, setSlug] = useState(existingProduct?.slug | "");
 
   const [product, setProduct] = useState({
     tags: "",
-
+    titulo: "",
     descripcion: "",
     precio: "",
     productosRelacionados: "",
@@ -24,6 +25,7 @@ const ProductForm = ({ existingProduct }) => {
   });
 
   const fileTypes = ["JPG", "PNG", "GIF", "JPEG", "AVIF", "WEBP"];
+
   const getNewSlug = (title) => {
     try {
       const newSlug =
@@ -33,7 +35,6 @@ const ProductForm = ({ existingProduct }) => {
           .replaceAll("'", "")
           .toLocaleLowerCase() || "";
       setSlug(newSlug);
-      console.log(newSlug);
     } catch (err) {
       console.log(err);
     }
@@ -175,8 +176,13 @@ const ProductForm = ({ existingProduct }) => {
     const productToSubmit = {
       ...product,
       categoria,
-      slug: slug,
+      slug: product.titulo
+        .trim()
+        .replaceAll(" ", "_")
+        .replaceAll("'", "")
+        .toLocaleLowerCase(),
       subcategoria,
+      sku: sku,
       descripcion, // Asumiendo que ReactQuill devuelve HTML como string
       images: imagesArray, // Asegúrate de que este campo coincida con el esperado por tu modelo
       tags: product.tags.split(",").map((tag) => tag.trim()), // Convertir string en array
@@ -233,6 +239,17 @@ const ProductForm = ({ existingProduct }) => {
           value={product.tags}
           onChange={handleInputChange}
           placeholder="Ejemplo: tag1, tag2"
+          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        />
+      </div>
+      <div>
+        <input
+          type="text"
+          name="sku"
+          id="sku"
+          value={sku}
+          onChange={(e) => setSku(e.target.value)}
+          placeholder="SKU"
           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         />
       </div>

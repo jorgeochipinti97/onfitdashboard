@@ -26,34 +26,24 @@ export default function Home() {
 
   return (
     <>
-       
-
       <div className="bg-black h-screen flex-col flex items-center pt-10 justify-start">
         <Drawer>
           <DrawerTrigger className="flex items-center mb-10 bg-white p-2 rounded-xl">
-
-              <svg
-                className="cursor-pointer mr-2"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                width={30}
-              >
-                <g
-                  stroke="#292D32"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                >
-                  <path d="M11 2H9C4 2 2 4 2 9v6c0 5 2 7 7 7h6c5 0 7-2 7-7v-2"></path>
-                  <path
-                    strokeMiterlimit="10"
-                    d="M16.04 3.02L8.16 10.9c-.3.3-.6.89-.66 1.32l-.43 3.01c-.16 1.09.61 1.85 1.7 1.7l3.01-.43c.42-.06 1.01-.36 1.32-.66l7.88-7.88c1.36-1.36 2-2.94 0-4.94-2-2-3.58-1.36-4.94 0zM14.91 4.15a7.144 7.144 0 004.94 4.94"
-                  ></path>
-                </g>
-              </svg>
-              <span>Crear Producto</span>
-
+            <svg
+              width={30}
+              className="mr-3 "
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="#000"
+                fillRule="evenodd"
+                d="M12 22c-4.714 0-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12s0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22zm0-13.75a.75.75 0 01.75.75v2.25H15a.75.75 0 010 1.5h-2.25V15a.75.75 0 01-1.5 0v-2.25H9a.75.75 0 010-1.5h2.25V9a.75.75 0 01.75-.75z"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+            <span>Crear Producto</span>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>

@@ -85,6 +85,7 @@ async function handlePut(req, res) {
       subcategoria,
       tags,
       slug,
+      sku,
       tracking,
     } = req.body;
     const fieldsToUpdate = {
@@ -95,6 +96,7 @@ async function handlePut(req, res) {
       images,
       talles,
       slug,
+      sku,
       categoria,
       subcategoria,
       tags,
