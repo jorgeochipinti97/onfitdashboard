@@ -217,7 +217,7 @@ const ProductForm = ({ existingProduct }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 ">
       {/* Título */}
-      <div className="flex">
+      <div className="w-full justify-around flex">
         <input
           type="text"
           name="titulo"
@@ -226,7 +226,7 @@ const ProductForm = ({ existingProduct }) => {
           required
           value={product.titulo}
           onChange={handleInputChange}
-          className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300 rounded-md"
+          className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
         />
         <input
           type="text"
@@ -235,13 +235,8 @@ const ProductForm = ({ existingProduct }) => {
           value={product.tags}
           onChange={handleInputChange}
           placeholder="Ejemplo: tag1, tag2"
-          className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300 rounded-md"
+          className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
         />
-      </div>
-
-      {/* Tags */}
-      <div></div>
-      <div>
         <input
           type="text"
           name="sku"
@@ -249,9 +244,11 @@ const ProductForm = ({ existingProduct }) => {
           value={sku}
           onChange={(e) => setSku(e.target.value)}
           placeholder="SKU"
-          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
         />
       </div>
+
+      {/* Tags */}
 
       {/* Descripción */}
       <div>
@@ -277,7 +274,7 @@ const ProductForm = ({ existingProduct }) => {
           placeholder="Precio"
           value={product.precio}
           onChange={handleInputChange}
-          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          className=" mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
         />
       </div>
 
@@ -290,7 +287,7 @@ const ProductForm = ({ existingProduct }) => {
           placeholder="categoria"
           value={categoria}
           onChange={(e) => setCategoria(e.target.value)}
-          className="mt-1 block w-fit pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          className="mt-1 block w-fit pl-3 pr-10 py-2 text-base mr-2 border-gray-800 border p-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
         >
           <option value="">Seleccione una categoría</option>
           <option value="hombres">Hombres</option>
@@ -307,7 +304,7 @@ const ProductForm = ({ existingProduct }) => {
             required
             value={subcategoria}
             onChange={(e) => setSubcategoria(e.target.value)}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-800 border p-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
           >
             <option value="">Seleccione una subcategoría</option>
             {getSubcategorias().map((subcat) => (
@@ -322,7 +319,7 @@ const ProductForm = ({ existingProduct }) => {
         {product &&
           product.talles.map((talle, index) => (
             <div key={index} className="w-fit flex flex-col">
-              <div>
+              <div className="mr-2">
                 <input
                   type="text"
                   name="nombre"
@@ -330,7 +327,7 @@ const ProductForm = ({ existingProduct }) => {
                   id={`talle-nombre-${index}`}
                   value={talle.nombre}
                   onChange={(e) => handleTalleChange(index, e)}
-                  className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
                 />
               </div>
               <div>
@@ -341,7 +338,7 @@ const ProductForm = ({ existingProduct }) => {
                   id={`talle-stock-${index}`}
                   value={talle.stock}
                   onChange={(e) => handleTalleChange(index, e)}
-                  className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
                 />
               </div>
             </div>
@@ -356,18 +353,20 @@ const ProductForm = ({ existingProduct }) => {
       </button>
 
       {/* Imágenes */}
-      <div>
+      <div className="flex ">
         <FileUploader
           handleChange={handleChange}
           name="file"
           types={fileTypes}
         />
-      </div>
-      <div>
+        <div className="flex-1 ">
         {imagesArray &&
           imagesArray.map((e) => (
-            <img key={e} src={e} alt="" className="w-[50px]" />
-          ))}
+            <img key={e} src={e} alt=""  className="mx-2 w-[50px]" />
+            ))}
+            </div>
+      </div>
+      <div>
       </div>
       {/* Botón de envío */}
       <div>
