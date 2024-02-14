@@ -217,7 +217,7 @@ const ProductForm = ({ existingProduct }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 ">
       {/* Título */}
-      <div>
+      <div className="flex">
         <input
           type="text"
           name="titulo"
@@ -226,12 +226,8 @@ const ProductForm = ({ existingProduct }) => {
           required
           value={product.titulo}
           onChange={handleInputChange}
-          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300 rounded-md"
         />
-      </div>
-
-      {/* Tags */}
-      <div>
         <input
           type="text"
           name="tags"
@@ -239,9 +235,12 @@ const ProductForm = ({ existingProduct }) => {
           value={product.tags}
           onChange={handleInputChange}
           placeholder="Ejemplo: tag1, tag2"
-          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300 rounded-md"
         />
       </div>
+
+      {/* Tags */}
+      <div></div>
       <div>
         <input
           type="text"
@@ -319,34 +318,35 @@ const ProductForm = ({ existingProduct }) => {
           </select>
         </div>
       </div>
-
-      {product &&
-        product.talles.map((talle, index) => (
-          <div key={index} className="grid grid-cols-2 w-fit">
-            <div>
-              <input
-                type="text"
-                name="nombre"
-                placeholder="Talle"
-                id={`talle-nombre-${index}`}
-                value={talle.nombre}
-                onChange={(e) => handleTalleChange(index, e)}
-                className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300 rounded-md"
-              />
+      <div className="flex">
+        {product &&
+          product.talles.map((talle, index) => (
+            <div key={index} className="w-fit flex flex-col">
+              <div>
+                <input
+                  type="text"
+                  name="nombre"
+                  placeholder="Talle"
+                  id={`talle-nombre-${index}`}
+                  value={talle.nombre}
+                  onChange={(e) => handleTalleChange(index, e)}
+                  className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <input
+                  type="number"
+                  name="stock"
+                  placeholder="Stock"
+                  id={`talle-stock-${index}`}
+                  value={talle.stock}
+                  onChange={(e) => handleTalleChange(index, e)}
+                  className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-300 rounded-md"
+                />
+              </div>
             </div>
-            <div>
-              <input
-                type="number"
-                name="stock"
-                placeholder="Stock"
-                id={`talle-stock-${index}`}
-                value={talle.stock}
-                onChange={(e) => handleTalleChange(index, e)}
-                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-300 rounded-md"
-              />
-            </div>
-          </div>
-        ))}
+          ))}
+      </div>
       <button
         type="button"
         onClick={addTalle}

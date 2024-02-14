@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <>
       <div className="bg-black h-screen flex-col flex items-center pt-10 justify-start">
-        <Drawer>
+        <Drawer className='max-h-[80vh]'>
           <DrawerTrigger className="flex items-center mb-10 bg-white p-2 rounded-xl">
             <svg
               width={30}

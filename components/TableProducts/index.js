@@ -80,7 +80,7 @@ const TableProducts = ({ products }) => {
               <TableCell className="font-medium">{e.precio}</TableCell>
 
               <TableCell>
-                <Drawer>
+                <Drawer className="max-h-[80vh]">
                   <DrawerTrigger>
                     <svg
                       className="cursor-pointer"
