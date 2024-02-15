@@ -215,7 +215,7 @@ const ProductForm = ({ existingProduct }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 ">
+    <form onSubmit={handleSubmit} className="space-y-4 max-h-[90vh]">
       {/* Título */}
       <div className="w-full justify-around flex">
         <input
@@ -226,7 +226,7 @@ const ProductForm = ({ existingProduct }) => {
           required
           value={product.titulo}
           onChange={handleInputChange}
-          className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
+          className=" w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
         />
         <input
           type="text"
@@ -235,7 +235,7 @@ const ProductForm = ({ existingProduct }) => {
           value={product.tags}
           onChange={handleInputChange}
           placeholder="Ejemplo: tag1, tag2"
-          className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
+          className=" w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
         />
         <input
           type="text"
@@ -244,8 +244,44 @@ const ProductForm = ({ existingProduct }) => {
           value={sku}
           onChange={(e) => setSku(e.target.value)}
           placeholder="SKU"
-          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
+          className=" focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
         />
+        <div>
+          <select
+            name="categoria"
+            id="categoria"
+            required
+            placeholder="categoria"
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            className=" block w-fit pl-3 pr-10 py-2 text-base mr-2 border-gray-800 border p-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          >
+            <option value="">Seleccione una categoría</option>
+            <option value="hombres">Hombres</option>
+            <option value="mujeres">Mujeres</option>
+            <option value="equipamiento">Equipamiento</option>
+            <option value="suplementos">Suplementos</option>
+            <option value="accesorios">Accesorios</option>
+          </select>
+        </div>
+        <div style={{ display: categoria == "accesorios" ? "none" : "block" }}>
+          <select
+            name="subcategoria"
+            id="subcategoria"
+            placeholder="subcategoria"
+            required
+            value={subcategoria}
+            onChange={(e) => setSubcategoria(e.target.value)}
+            className=" mx-2 block w-full pl-3 pr-10 py-2 text-base border-gray-800 border p-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          >
+            <option value="">Seleccione una subcategoría</option>
+            {getSubcategorias().map((subcat) => (
+              <option key={subcat} value={subcat}>
+                {subcat.replace("_", " ")}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Tags */}
@@ -264,62 +300,27 @@ const ProductForm = ({ existingProduct }) => {
       </div>
 
       {/* Precio */}
-      <div>
-        <label className="font-bold">Precio</label>
-        <input
-          type="number"
-          name="precio"
-          id="precio"
-          required
-          placeholder="Precio"
-          value={product.precio}
-          onChange={handleInputChange}
-          className=" mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
-        />
-      </div>
 
       {/* Categoría */}
-      <div className="flex">
-        <select
-          name="categoria"
-          id="categoria"
-          required
-          placeholder="categoria"
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value)}
-          className="mt-1 block w-fit pl-3 pr-10 py-2 text-base mr-2 border-gray-800 border p-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-        >
-          <option value="">Seleccione una categoría</option>
-          <option value="hombres">Hombres</option>
-          <option value="mujeres">Mujeres</option>
-          <option value="equipamiento">Equipamiento</option>
-          <option value="suplementos">Suplementos</option>
-          <option value="accesorios">Accesorios</option>
-        </select>
-        <div style={{ display: categoria == "accesorios" ? "none" : "block" }}>
-          <select
-            name="subcategoria"
-            id="subcategoria"
-            placeholder="subcategoria"
+      <div className="flex ">
+        <div>
+          <input
+            type="number"
+            name="precio"
+            id="precio"
             required
-            value={subcategoria}
-            onChange={(e) => setSubcategoria(e.target.value)}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-800 border p-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-          >
-            <option value="">Seleccione una subcategoría</option>
-            {getSubcategorias().map((subcat) => (
-              <option key={subcat} value={subcat}>
-                {subcat.replace("_", " ")}
-              </option>
-            ))}
-          </select>
+            placeholder="Precio"
+            value={product.precio}
+            onChange={handleInputChange}
+            className=" mx-2  focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
+          />
         </div>
       </div>
       <div className="flex">
         {product &&
           product.talles.map((talle, index) => (
             <div key={index} className="w-fit flex flex-col">
-              <div className="mr-2">
+              <div className="">
                 <input
                   type="text"
                   name="nombre"
@@ -327,7 +328,7 @@ const ProductForm = ({ existingProduct }) => {
                   id={`talle-nombre-${index}`}
                   value={talle.nombre}
                   onChange={(e) => handleTalleChange(index, e)}
-                  className="mt-1 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
+                  className=" mb-2 w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
                 />
               </div>
               <div>
@@ -338,7 +339,7 @@ const ProductForm = ({ existingProduct }) => {
                   id={`talle-stock-${index}`}
                   value={talle.stock}
                   onChange={(e) => handleTalleChange(index, e)}
-                  className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
+                  className=" focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
                 />
               </div>
             </div>
@@ -359,15 +360,14 @@ const ProductForm = ({ existingProduct }) => {
           name="file"
           types={fileTypes}
         />
-        <div className="flex-1 ">
-        {imagesArray &&
-          imagesArray.map((e) => (
-            <img key={e} src={e} alt=""  className="mx-2 w-[50px]" />
+        <div className="flex-1 flex w-full  ">
+          {imagesArray &&
+            imagesArray.map((e) => (
+              <img key={e} src={e} alt="" className="mx-2 w-[50px]" />
             ))}
-            </div>
+        </div>
       </div>
-      <div>
-      </div>
+      <div></div>
       {/* Botón de envío */}
       <div>
         <button

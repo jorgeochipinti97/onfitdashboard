@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/drawer";
 import useProducts from "./hooks/useProducts";
 import dynamic from "next/dynamic";
+import { useOrders } from "./hooks/useOrders";
+import { useEffect } from "react";
+import { TableOrders } from "@/components/TableOrders";
 
 const ProductForm = dynamic(
   () => import("@/components/ProductForm"),
@@ -23,11 +26,16 @@ const TableProducts = dynamic(
 
 export default function Home() {
   const { products } = useProducts();
+  const { orders } = useOrders();
+
+  useEffect(() => {
+    orders && console.log(orders);
+  }, [orders]);
 
   return (
     <>
-      <div className="bg-black h-screen flex-col flex items-center pt-10 justify-start">
-        <Drawer className='max-h-[80vh]'>
+      <div className="bg-black min-h-screen flex-col flex items-center pt-10 justify-start">
+        <Drawer className="max-h-[80vh]">
           <DrawerTrigger className="flex items-center mb-10 bg-white p-2 rounded-xl">
             <svg
               width={30}
@@ -63,7 +71,7 @@ export default function Home() {
             <TableProducts products={products} />
           </TabsContent>
           <TabsContent value="ordenes">
-            <span className="text-white">ordenes </span>
+            <TableOrders orders={orders} />
           </TabsContent>
           <TabsContent value="datos">
             <span className="text-white">datos </span>
