@@ -58,7 +58,7 @@ export const TableOrders = ({ orders }) => {
                       <DrawerDescription>
                         <div className="flex justify-around">
                           {e.orderItems.map((p) => (
-                            <div className="flex flex-col items-center">
+                            <div className="flex flex-col items-center" key={p.title}>
                               <img className="w-[150px]" src={p.image} />
                               <p>{p.title}</p>
                               <p>{p.quantity}</p>
