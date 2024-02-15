@@ -1,7 +1,5 @@
-
 import OrderOnfit from "@/app/Models/Order";
 import { db } from "@/app/database";
-
 
 export default function handler(req, res) {
   switch (req.method) {
@@ -23,7 +21,7 @@ const createOrder = async (req, res) => {
     newOrder.total = Math.round(newOrder.total * 100) / 100;
     console.log(newOrder);
     await newOrder.save();
-    await db.disconnect();
+
     return res.status(201).json(newOrder);
   } catch (error) {
     console.log(error);
@@ -54,7 +52,6 @@ const getOrders = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: error.message || "Server error" });
   } finally {
-    await db.disconnect();
   }
 };
 
@@ -65,7 +62,6 @@ const updateOrder = async (req, res) => {
     const orderToUpdate = await OrderOnfit.findById(_id);
 
     if (!orderToUpdate) {
-      await db.disconnect();
       return res.status(404).json({ message: "Order not found" });
     }
 
@@ -73,12 +69,10 @@ const updateOrder = async (req, res) => {
       ...req.body,
     });
 
-    await db.disconnect();
-
     return res.status(200).json(updatedOrder);
   } catch (error) {
     console.log(error);
-    await db.disconnect();
+
     res
       .status(500)
       .json({ message: error.message || "Server error during order update" });

@@ -50,7 +50,27 @@ export const TableOrders = ({ orders }) => {
 
               <TableCell className="font-medium ">{e.total}</TableCell>
 
-              <TableCell className="font-medium">{e.numberOfItems}</TableCell>
+              <TableCell className="font-medium">
+                <Drawer className="max-h-[80vh]">
+                  <DrawerTrigger><span className="px-2 py-1 bg-black text-white rounded-full">{e.numberOfItems}</span></DrawerTrigger>
+                  <DrawerContent>
+                    <DrawerHeader>
+                      <DrawerDescription>
+                        <div className="flex justify-around">
+                          {e.orderItems.map((p) => (
+                            <div className="flex flex-col items-center">
+                              <img className="w-[150px]" src={p.image} />
+                              <p>{p.title}</p>
+                              <p>{p.quantity}</p>
+                              <p>{p.size}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </DrawerDescription>
+                    </DrawerHeader>
+                  </DrawerContent>
+                </Drawer>
+              </TableCell>
 
               <TableCell className="font-medium">{e.codGestion}</TableCell>
             </TableRow>
