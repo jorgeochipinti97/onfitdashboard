@@ -24,10 +24,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
+import React, { useState } from "react";
 import axios from "axios";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "../ui/button";
 
 export const TableOrders = ({ orders }) => {

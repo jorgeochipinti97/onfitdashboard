@@ -28,10 +28,6 @@ export default function Home() {
   const { products } = useProducts();
   const { orders } = useOrders();
 
-  useEffect(() => {
-    orders && console.log(orders);
-  }, [orders]);
-
   return (
     <>
       <div className="bg-black min-h-screen flex-col flex items-center pt-10 justify-start">

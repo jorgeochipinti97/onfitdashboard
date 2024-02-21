@@ -35,9 +35,7 @@ const ProductForm = dynamic(
 );
 
 const TableProducts = ({ products }) => {
-  useEffect(() => {
-    console.log(products.map((e) => console.log(e.title)));
-  }, [products]);
+
   const handleDelete = async (product) => {
     try {
       // Asegúrate de que 'product' contiene un campo '_id'
