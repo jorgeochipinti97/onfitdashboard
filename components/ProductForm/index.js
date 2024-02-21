@@ -6,7 +6,7 @@ import "react-quill/dist/quill.snow.css"; // Importa los estilos CSS de React Qu
 const ProductForm = ({ existingProduct }) => {
   const [imagesArray, setImagesArray] = useState(existingProduct?.images || []);
   const [categoria, setCategoria] = useState(existingProduct?.categoria || "");
-  const [sku, setSku] = useState(existingProduct?.sku || "");
+
   const [subcategoria, setSubcategoria] = useState(
     existingProduct?.subcategoria || ""
   );
@@ -182,7 +182,6 @@ const ProductForm = ({ existingProduct }) => {
         .replaceAll("'", "")
         .toLocaleLowerCase(),
       subcategoria,
-      sku: sku,
       descripcion, // Asumiendo que ReactQuill devuelve HTML como string
       images: imagesArray, // Asegúrate de que este campo coincida con el esperado por tu modelo
       tags: product.tags.split(",").map((tag) => tag.trim()), // Convertir string en array
@@ -236,15 +235,6 @@ const ProductForm = ({ existingProduct }) => {
           onChange={handleInputChange}
           placeholder="Ejemplo: tag1, tag2"
           className=" w-fit focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
-        />
-        <input
-          type="text"
-          name="sku"
-          id="sku"
-          value={sku}
-          onChange={(e) => setSku(e.target.value)}
-          placeholder="SKU"
-          className=" focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
         />
         <div>
           <select

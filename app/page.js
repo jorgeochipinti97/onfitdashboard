@@ -61,7 +61,7 @@ export default function Home() {
             </DrawerHeader>
           </DrawerContent>
         </Drawer>
-        <Tabs defaultValue="productos" className="w-[80vw]">
+        <Tabs defaultValue="productos" className="w-[95vw]">
           <TabsList className=" w-full">
             <TabsTrigger value="productos">Productos</TabsTrigger>
             <TabsTrigger value="ordenes">Ordenes</TabsTrigger>

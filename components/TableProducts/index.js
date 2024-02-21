@@ -26,7 +26,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import React from "react";
+import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import axios from "axios";
 const ProductForm = dynamic(
@@ -35,6 +35,9 @@ const ProductForm = dynamic(
 );
 
 const TableProducts = ({ products }) => {
+  useEffect(() => {
+    console.log(products.map((e) => console.log(e.title)));
+  }, [products]);
   const handleDelete = async (product) => {
     try {
       // Asegúrate de que 'product' contiene un campo '_id'
