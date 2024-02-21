@@ -50,13 +50,28 @@ export const TableOrders = ({ orders }) => {
     });
   };
 
+  const handleChangeEstado = async (orderId, nuevoEstado) => {
+    try {
+      // Llamada a la API para actualizar el estado de la orden
+      const response = await axios.put(`/api/orders?_id=${orderId}`, {
+        estado: nuevoEstado,
+      });
+      if (response.status === 200) {
+        window.location.reload();
+        // Aquí podrías actualizar el estado local o realizar otras acciones necesarias
+      }
+    } catch (error) {
+      console.error("Error al actualizar la orden:", error);
+    }
+  };
+
   function convertToCSV(orders, selectedOrders) {
     // Define your CSV headers based on the provided text
     const headers = [
       "Número de orden",
       "Email",
       "Fecha",
-      "Estado del pago",
+
       "Estado del envío",
       "Nombre del comprador",
       "DNI / CUIT",
@@ -83,7 +98,6 @@ export const TableOrders = ({ orders }) => {
         order._id, // Assuming this is the property name in your order object
         order.email,
         order.date, // Format the date as needed
-        "acreditado",
         order.estado,
         order.titular,
         order.dniTitular,
@@ -124,11 +138,12 @@ export const TableOrders = ({ orders }) => {
   };
 
   return (
-    <div>
-      <button className="mt-10 text-white" onClick={handleExportSelected}>
-        Exportar Seleccionados a CSV
-      </button>
-
+    <div className="bg-slate-200">
+      <div className="flex items-center justify-center">
+        <Button className="my-10 text-white" onClick={handleExportSelected}>
+          Exportar Seleccionados a CSV
+        </Button>
+      </div>
       <Table className="bg-white">
         <TableCaption>Lista de Ordenes.</TableCaption>
         <TableHeader>
@@ -166,15 +181,20 @@ export const TableOrders = ({ orders }) => {
                   <p className="text-xs">{e.codGestion}</p>
                 </TableCell>
                 <TableCell className="font-medium ">
-                  {/* {e.estado} */}
-                  <Select>
+                  <Select
+                    key={e._id}
+                    onValueChange={(nuevoEstado) =>
+                      handleChangeEstado(e._id, nuevoEstado)
+                    }
+                    value={`${e.estado}`}
+                  >
                     <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Estado" />
+                      <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="light">Acreditado</SelectItem>
-                      <SelectItem value="dark">Despachado</SelectItem>
-                      <SelectItem value="system">Entregado</SelectItem>
+                      <SelectItem value="acreditado">Acreditado</SelectItem>
+                      <SelectItem value="despachado">Despachado</SelectItem>
+                      <SelectItem value="entregado">Entregado</SelectItem>
                     </SelectContent>
                   </Select>
                 </TableCell>
@@ -203,19 +223,25 @@ export const TableOrders = ({ orders }) => {
                               </p>
                               <p className="mt-2">Email: {e.email}</p>
                             </div>
-                            {e.orderItems.map((p) => (
-                              <div
-                                className="flex flex-col mt-5 items-center"
-                                key={p.title}
-                              >
-                                <img className="w-[150px]" src={p.image} />
-                                <div className="flex-col flex">
-                                  <p>{p.title}</p>
-                                  <p>{p.quantity}</p>
-                                  <p>{p.size}</p>
+                            <div className="flex justify-center">
+                              {e.orderItems.map((p) => (
+                                <div
+                                  className="flex flex-col mt-5  mx-2 items-center"
+                                  key={p.title}
+                                >
+                                  <img
+                                    className="w-[80px] rounded-xl"
+                                    src={p.image}
+                                  />
+                                  <div className="flex-col flex">
+                                    <p>Nombre: {p.title}</p>
+                                    <p>Cantidad: {p.quantity}</p>
+                                    <p>Talle: {p.size}</p>
+                                    <p>SKU: {p.sku}</p>
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
+                              ))}
+                            </div>
                           </div>
                         </DrawerDescription>
                       </DrawerHeader>
