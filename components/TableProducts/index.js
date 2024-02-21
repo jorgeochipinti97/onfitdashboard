@@ -73,13 +73,10 @@ const TableProducts = ({ products }) => {
           products.map((e) => (
             <TableRow key={e._id}>
               <TableCell className="font-medium">{e.titulo}</TableCell>
-
               <TableCell className="font-medium ">{e.categoria}</TableCell>
-
               <TableCell className="font-medium">
                 <img src={e.images[0]} alt="" className="w-[50px]" />
               </TableCell>
-
               <TableCell className="font-medium">{e.precio}</TableCell>
 
               <TableCell>

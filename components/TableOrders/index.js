@@ -110,7 +110,7 @@ export const TableOrders = ({ orders }) => {
         order.postalCode,
         order.provincia,
         "Urbano express | Entrega",
-        // Assuming orderItems is an array of products in the order
+
         order.orderItems
           .map((item) => `${item.title} - ${item.size}`)
           .join("; "), // Concatenate all product names
@@ -125,8 +125,6 @@ export const TableOrders = ({ orders }) => {
       .join("\n");
   }
   const handleExportSelected = () => {
-    // Filtrar solo las órdenes seleccionadas
-
     const csvString = convertToCSV(orders, selectedOrders);
     const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
@@ -219,7 +217,9 @@ export const TableOrders = ({ orders }) => {
                               <p className=" mt-2">DNI: {e.dniTitular}</p>
                               <p className=" mt-2">Celular: {e.phone}</p>
                               <p className=" mt-2">
-                                Dirección: {e.address} {e.ciudad} {e.provincia}
+                                Dirección: {e.address} {e.numberOfAddress}{" "}
+                                {e.piso && e.piso}, {e.localidad}, {e.ciudad}{" "}
+                                {e.provincia}
                               </p>
                               <p className="mt-2">Email: {e.email}</p>
                             </div>
