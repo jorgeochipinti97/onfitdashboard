@@ -63,13 +63,72 @@ export const TableOrders = ({ orders }) => {
     }
   };
 
+  // function convertToCSV(orders, selectedOrders) {
+  //   // Define your CSV headers based on the provided text
+  //   const headers = [
+  //     "Número de orden",
+  //     "Email",
+  //     "Fecha",
+
+  //     "Estado del envío",
+  //     "Nombre del comprador",
+  //     "DNI / CUIT",
+  //     "Teléfono",
+  //     "Dirección",
+  //     "Número",
+  //     "Piso",
+  //     "Localidad",
+  //     "Ciudad",
+  //     "Código postal",
+  //     "Provincia o estado",
+  //     "Medio de envío",
+  //     "Nombre del producto",
+  //     "Cantidad del producto",
+  //     "SKU",
+  //     "Identificador de la orden",
+  //   ];
+
+  //   // Map the orders to the CSV format
+  //   const rows = orders
+  //     .filter((order) => selectedOrders.includes(order._id)) // Filter only selected orders
+  //     .map((order) => [
+  //       // Map each order to the CSV row format
+  //       order._id, // Assuming this is the property name in your order object
+  //       order.email,
+  //       order.date, // Format the date as needed
+  //       order.estado,
+  //       order.titular,
+  //       order.dniTitular,
+  //       order.phone,
+  //       order.address,
+  //       order.numberOfAddress,
+  //       order.piso,
+  //       order.localidad,
+  //       order.ciudad,
+  //       order.postalCode,
+  //       order.provincia,
+  //       "Urbano express | Entrega",
+
+  //       order.orderItems
+  //         .map((item) => `${item.title} - ${item.size}`)
+  //         .join("; "), // Concatenate all product names
+  //       order.orderItems.map((item) => item.quantity).join("; "), // Concatenate all quantities
+  //       order.orderItems.map((item) => item.sku || "").join("; "),
+  //       order.codGestion,
+  //     ]);
+
+  //   // Join the headers and rows to create the final CSV string
+  //   return [headers.join(",")]
+  //     .concat(rows.map((row) => row.join(",")))
+  //     .join("\n");
+  // }
+
   function convertToCSV(orders, selectedOrders) {
-    // Define your CSV headers based on the provided text
+    // Define los encabezados CSV basados en el texto proporcionado
     const headers = [
       "Número de orden",
       "Email",
       "Fecha",
-
       "Estado del envío",
       "Nombre del comprador",
       "DNI / CUIT",
@@ -87,41 +146,55 @@ export const TableOrders = ({ orders }) => {
       "SKU",
       "Identificador de la orden",
     ];
-
-    // Map the orders to the CSV format
-    const rows = orders
-      .filter((order) => selectedOrders.includes(order._id)) // Filter only selected orders
-      .map((order) => [
-        // Map each order to the CSV row format
-        order._id, // Assuming this is the property name in your order object
-        order.email,
-        order.date, // Format the date as needed
-        order.estado,
-        order.titular,
-        order.dniTitular,
-        order.phone,
-        order.address,
-        order.numberOfAddress,
-        order.piso,
-        order.localidad,
-        order.ciudad,
-        order.postalCode,
-        order.provincia,
-        "Urbano express | Entrega",
-
-        order.orderItems
-          .map((item) => `${item.title} - ${item.size}`)
-          .join("; "), // Concatenate all product names
-        order.orderItems.map((item) => item.quantity).join("; "), // Concatenate all quantities
-        order.orderItems.map((item) => item.sku || "").join("; "),
-        order.codGestion,
-      ]);
-
-    // Join the headers and rows to create the final CSV string
-    return [headers.join(",")]
-      .concat(rows.map((row) => row.join(",")))
-      .join("\n");
+  
+    let rows = [];
+  
+    // Filtra solo las órdenes seleccionadas y itera sobre ellas
+    orders.filter(order => selectedOrders.includes(order._id)).forEach(order => {
+      // Agrega una fila por orden con la información de la orden y el primer producto
+      order.orderItems.forEach((item, index) => {
+        // Si es el primer producto, incluye toda la información de la orden
+        if (index === 0) {
+          const firstProductRow = [
+            order._id,
+            order.email,
+            order.date, // Asegúrate de formatear la fecha según sea necesario
+            order.estado,
+            order.titular,
+            order.dniTitular,
+            order.phone,
+            order.address,
+            order.numberOfAddress,
+            order.piso,
+            order.localidad,
+            order.ciudad,
+            order.postalCode,
+            order.provincia,
+            "Urbano express | Entrega",
+            `${item.title} - ${item.size}`,
+            item.quantity,
+            item.sku || "",
+            order.codGestion,
+          ];
+          rows.push(firstProductRow.join(","));
+        } else {
+          // Para productos subsiguientes, solo incluye los detalles del producto
+          const subsequentProductRow = [
+            "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", // Campos vacíos para la información de la orden
+            `${item.title} - ${item.size}`,
+            item.quantity,
+            item.sku || "",
+            "", // Campo vacío para el identificador de la orden, asumiendo que no se repite
+          ];
+          rows.push(subsequentProductRow.join(","));
+        }
+      });
+    });
+  
+    // Une los encabezados con las filas para crear la cadena CSV final
+    return [headers.join(",")].concat(rows).join("\n");
   }
+  
   const handleExportSelected = () => {
     const csvString = convertToCSV(orders, selectedOrders);
     const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
