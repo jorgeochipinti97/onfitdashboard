@@ -158,7 +158,7 @@ export const TableOrders = ({ orders }) => {
           const firstProductRow = [
             order._id,
             order.email,
-            order.date, // Asegúrate de formatear la fecha según sea necesario
+            order.createdAt, // Asegúrate de formatear la fecha según sea necesario
             order.estado,
             order.titular,
             order.dniTitular,
