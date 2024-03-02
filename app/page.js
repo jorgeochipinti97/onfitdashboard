@@ -12,8 +12,10 @@ import {
 import useProducts from "./hooks/useProducts";
 import dynamic from "next/dynamic";
 import { useOrders } from "./hooks/useOrders";
-import { useEffect } from "react";
+import { Input } from "@/components/ui/input";
 import { TableOrders } from "@/components/TableOrders";
+import { useEffect, useState } from "react";
+import gsap, { Power1 } from "gsap";
 
 const ProductForm = dynamic(
   () => import("@/components/ProductForm"),
@@ -27,10 +29,76 @@ const TableProducts = dynamic(
 export default function Home() {
   const { products } = useProducts();
   const { orders } = useOrders();
+  const [password, setPassword] = useState("");
+  useEffect(() => {
+    password == "royer" &&
+      gsap.to(".dashboard", {
+        opacity: 0,
+        ease: Power1.easeIn,
+      });
+    password == "royer" &&
+      gsap.to(".dashboard", {
+        delay: 0.3,
+        display: "none",
+        ease: Power1.easeIn,
+      });
+    password == "royer" &&
+      gsap.to(".royer", {
+        delay: 0.5,
+        display: "flex",
+        ease: Power1.easeIn,
+      });
+    password == "royer" &&
+      gsap.to(".royer", {
+        delay: 1,
+        opacity: 1,
+        ease: Power1.easeIn,
+      });
 
+    password == "royer" &&
+      gsap.to(".ementors", {
+        delay: 0.3,
+        display: "none",
+        ease: Power1.easeIn,
+      });
+    password == "ementors" &&
+      gsap.to(".ementors", {
+        delay: 0.5,
+        display: "flex",
+        ease: Power1.easeIn,
+      });
+    password == "ementors" &&
+      gsap.to(".ementors", {
+        delay: 1,
+        opacity: 1,
+        ease: Power1.easeIn,
+      });
+
+    password == "ementors" &&
+      gsap.to(".dashboard", {
+        delay: 0.5,
+        display: "none",
+        ease: Power1.easeIn,
+      });
+  }, [password]);
   return (
     <>
-      <div className="bg-black min-h-screen flex-col flex items-center pt-10 justify-start">
+      {/* <div className="bg-black h-screen dashboard" style={{}}>
+        <div className="flex justify-center h-full items-center">
+          <div className="w-11/12 md:w-3/12">
+            <Input
+              className="bg-white"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+        </div>
+      </div> */}
+
+      {/* <div
+        className="royer bg-black min-h-screen flex-col  items-center pt-10 justify-start"
+        style={{ display: "none", opacity: 0 }}
+      >
         <Drawer className="max-h-[80vh]">
           <DrawerTrigger className="flex items-center mb-10 bg-white p-2 rounded-xl">
             <svg
@@ -73,6 +141,12 @@ export default function Home() {
             <span className="text-white">datos </span>
           </TabsContent>
         </Tabs>
+      </div> */}
+      <div
+        className="ementors bg-black min-h-screen flex-col  items-center pt-10 justify-start"
+        style={{ display: "auto", opacity: 1 }}
+      >
+        <TableOrders orders={orders} />
       </div>
     </>
   );

@@ -74,3 +74,22 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px; /* Espacio entre las etiquetas */
+  margin: auto;
+  width: 100%; /* Ajusta al tamaño de la hoja A4 */
+}
+
+.a4-container {
+  width: 794px; /* Ancho de A4 en píxeles */
+  max-width: 100%;
+  height: 100vh; /* Altura ajustable según el contenido, puedes fijarlo a 1123px para una altura A4 exacta */
+  margin: auto; /* Centrar el contenedor */
+  padding: 2px; /* Agregar algo de padding */
+background-color: white;
+
+}
