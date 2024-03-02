@@ -83,7 +83,7 @@ export default function Home() {
   }, [password]);
   return (
     <>
-      {/* <div className="bg-black h-screen dashboard" style={{}}>
+      <div className="bg-black h-screen dashboard" style={{}}>
         <div className="flex justify-center h-full items-center">
           <div className="w-11/12 md:w-3/12">
             <Input
@@ -93,9 +93,9 @@ export default function Home() {
             />
           </div>
         </div>
-      </div> */}
+      </div>
 
-      {/* <div
+      <div
         className="royer bg-black min-h-screen flex-col  items-center pt-10 justify-start"
         style={{ display: "none", opacity: 0 }}
       >
@@ -141,10 +141,10 @@ export default function Home() {
             <span className="text-white">datos </span>
           </TabsContent>
         </Tabs>
-      </div> */}
+      </div>
       <div
         className="ementors bg-black min-h-screen flex-col  items-center pt-10 justify-start"
-        style={{ display: "auto", opacity: 1 }}
+        style={{ display: "none", opacity: 0 }}
       >
         <TableOrders orders={orders} />
       </div>

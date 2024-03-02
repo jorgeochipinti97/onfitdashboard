@@ -1,3 +1,4 @@
+import Counter from "@/app/Models/Counter";
 import OrderOnfit from "@/app/Models/Order";
 import { db } from "@/app/database";
 
@@ -78,3 +79,16 @@ const updateOrder = async (req, res) => {
       .json({ message: error.message || "Server error during order update" });
   }
 };
+
+
+async function getNextSequenceValue(sequenceName) {
+  const result = await Counter.findOneAndUpdate(
+    { _id: sequenceName },
+    { $inc: { sequence_value: 1 } },
+    { new: true, upsert: true }
+  );
+  if (!result) {
+    throw new Error(`No se pudo incrementar el valor de secuencia para ${sequenceName}`);
+  }
+  return result.sequence_value;
+}
