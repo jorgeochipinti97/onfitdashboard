@@ -16,9 +16,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const html2pdf = dynamic(() => import("html2pdf.js"), {
-  ssr: false,
-});
+
+
 import {
   Drawer,
   DrawerContent,
@@ -71,7 +70,7 @@ export const TableOrders = ({ orders }) => {
     }
   };
 
-  const exportarAPdfYActualizarOrdenes = () => {
+  const exportarAPdfYActualizarOrdenes = async () => {
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString().split("T")[0];
     const element = document.querySelector(".a4-container");
@@ -85,21 +84,24 @@ export const TableOrders = ({ orders }) => {
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
     };
 
-    // Generar y descargar el PDF
-    html2pdf()
-      .set(opciones)
-      .from(element)
-      .save()
-      .then(() => {
+    // Importa html2pdf dinámicamente
+    try {
+      const html2pdf = (await import('html2pdf.js')).default;
+
+      // Generar y descargar el PDF
+      html2pdf().from(element).set(opciones).save().then(() => {
         // Una vez descargado el PDF, actualizar el estado de las órdenes
         orders
           .filter((order) => selectedOrders.includes(order._id))
           .forEach((order) => {
             handleChangeEstado(order._id, "impreso").catch(console.error);
           });
-      })
-      .catch(console.error);
+      }).catch(console.error);
+    } catch (error) {
+      console.error("Error al cargar html2pdf:", error);
+    }
   };
+
 
   function convertToCSV(orders, selectedOrders) {
     // Define los encabezados CSV basados en el texto proporcionado
