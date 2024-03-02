@@ -7,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import html2pdf from "html2pdf.js";
 
 import {
   Select,
@@ -16,9 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-import ReactDOM from "react-dom";
+
+const html2pdf = dynamic(() => import("html2pdf.js"), {
+  ssr: false,
+});
 import {
   Drawer,
   DrawerContent,
@@ -27,12 +27,12 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Button } from "../ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Separator } from "../ui/separator";
+
 import { formatPrice } from "@/app/utils/currency";
+import dynamic from "next/dynamic";
 
 export const TableOrders = ({ orders }) => {
   const [selectedOrders, setSelectedOrders] = useState([]);
@@ -244,7 +244,9 @@ export const TableOrders = ({ orders }) => {
                 <TableCell className="">
                   <p className="text-xs">{e._id} </p>
                 </TableCell>
-                <TableCell className="font-medium ">{formatPrice(e.total)}</TableCell>
+                <TableCell className="font-medium ">
+                  {formatPrice(e.total)}
+                </TableCell>
                 <TableCell className="font-medium ">{e.titular}</TableCell>
                 <TableCell className="font-medium">
                   <p className="text-xs">{e.codGestion}</p>
@@ -285,7 +287,9 @@ export const TableOrders = ({ orders }) => {
                           <div className="flex justify-around flex-col items-center">
                             <div>
                               <p className="mt-2">Token: {e.token}</p>
-                              <p className="mt-2">Total: {formatPrice(e.total)}</p>
+                              <p className="mt-2">
+                                Total: {formatPrice(e.total)}
+                              </p>
                               <p className=" mt-2">Nombre: {e.titular}</p>
                               <p className=" mt-2">DNI: {e.dniTitular}</p>
                               <p className=" mt-2">Celular: {e.phone}</p>
@@ -344,7 +348,9 @@ export const TableOrders = ({ orders }) => {
                       <div className="bg-black h-1 rounded-full my-4 w-full" />
                       <div className=" flex justify-between">
                         <p className=" font-geist font-bold">Total: </p>
-                        <p className=" font-geist font-bold">{formatPrice(order.total)} </p>
+                        <p className=" font-geist font-bold">
+                          {formatPrice(order.total)}{" "}
+                        </p>
                       </div>
                       <div className="bg-black h-1 rounded-full my-4 w-full" />
                       <p className=" mt-2 uppercase font-bold font-geist">
