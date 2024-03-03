@@ -64,34 +64,38 @@ export const TableDiscount = () => {
 
   function convertToCSV(codes) {
     // Define los encabezados CSV basados en los campos de los códigos
-    const headers = ["code", "sede", "valor", "fecha"];
+    const headers = [
+      "code",
+      "sede",
+      isPercentaje ? "% descuento" : "valor",
+      "fecha",
+    ];
     let rows = [headers.join(",")]; // Inicia con los encabezados como primera fila
-  
+
     // Itera sobre cada código para construir las filas del CSV
-    codes.forEach(code => {
+    codes.forEach((code) => {
       const row = [
         code._id, // El código
         code.sede, // La sede
         code.valor, // El valor del descuento
-        formatDate(code.createdAt) // La fecha, formateada
+        formatDate(code.createdAt), // La fecha, formateada
       ];
       rows.push(row.join(",")); // Une los elementos de la fila con comas y agrega la fila a las filas
     });
-  
+
     // Une todas las filas con saltos de línea para formar el contenido CSV completo
     return rows.join("\n");
   }
-  
+
   // Función auxiliar para formatear fechas en un formato legible
   // Puedes ajustar el formato de fecha según tus necesidades
   function formatDate(date) {
     const d = new Date(date);
     const year = d.getFullYear();
-    const month = ('0' + (d.getMonth() + 1)).slice(-2); // Añade un cero inicial y toma los últimos 2 dígitos
-    const day = ('0' + d.getDate()).slice(-2); // Añade un cero inicial y toma los últimos 2 dígitos
+    const month = ("0" + (d.getMonth() + 1)).slice(-2); // Añade un cero inicial y toma los últimos 2 dígitos
+    const day = ("0" + d.getDate()).slice(-2); // Añade un cero inicial y toma los últimos 2 dígitos
     return `${day}/${month}/${year}`; // Formato DD/MM/YYYY
   }
-  
 
   const handleExportSelected = (codes) => {
     const fechaActual = new Date();
@@ -117,7 +121,9 @@ export const TableDiscount = () => {
           </SelectTrigger>
           <SelectContent>
             {sucursales.map((e) => (
-              <SelectItem key={e} value={e}>{e}</SelectItem>
+              <SelectItem key={e} value={e}>
+                {e}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
