@@ -135,12 +135,13 @@ export const TableOrders = ({ orders }) => {
       .forEach((order) => {
         // Agrega una fila por orden con la información de la orden y el primer producto
         order.orderItems.forEach((item, index) => {
+
           // Si es el primer producto, incluye toda la información de la orden
           if (index === 0) {
             const firstProductRow = [
-              order._id,
+              order.codGestion,
               order.email,
-              order.createdAt, // Asegúrate de formatear la fecha según sea necesario
+              `"${formatDate(order.createdAt)}"`, // Asegúrate de formatear la fecha según sea necesario
               order.estado,
               order.titular,
               order.dniTitular,
@@ -156,7 +157,7 @@ export const TableOrders = ({ orders }) => {
               `${item.title} - ${item.size}`,
               item.quantity,
               item.sku || "",
-              order.codGestion,
+              order._id,
             ];
             rows.push(firstProductRow.join(","));
           } else {
@@ -192,11 +193,13 @@ export const TableOrders = ({ orders }) => {
   }
 
   const handleExportSelected = () => {
+    const fechaActual = new Date();
+    const fechaFormateada = fechaActual.toISOString().split("T")[0];
     const csvString = convertToCSV(orders, selectedOrders);
     const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.setAttribute("href", URL.createObjectURL(blob));
-    link.setAttribute("download", "exported_orders.csv");
+    link.setAttribute("download", `tiendaonfit-${fechaFormateada}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -341,16 +344,16 @@ export const TableOrders = ({ orders }) => {
                 <div className=" w-12/12 p-3 mx-2 border-2 border-black border-dashed rounded-xl	">
                   <div className="flex justify-around flex-col items-center">
                     <div>
-                      <p className="mt-2 font-geist font-bold text-md">
+                      <p className="mt-2 font-geist font-bold text-xs">
                         Orden: {order.codGestion}
                       </p>
-                      <p className="mt-2 font-mono font-bold text-md">
+                      <p className="mt-2 font-mono font-bold text-xs">
                         Realizada: {formatDate(order.createdAt)}
                       </p>
                       <div className="bg-black h-1 rounded-full my-4 w-full" />
                       <div className=" flex justify-between">
-                        <p className=" font-geist font-bold">Total: </p>
-                        <p className=" font-geist font-bold">
+                        <p className=" font-geist font-bold text-xs">Total: </p>
+                        <p className=" font-geist font-bold text-xs">
                           {formatPrice(order.total)}{" "}
                         </p>
                       </div>
@@ -359,20 +362,20 @@ export const TableOrders = ({ orders }) => {
                         {" "}
                         {order.titular}
                       </p>
-                      <p className=" mt-2 uppercase font-mono">
+                      <p className=" mt-2 uppercase font-mono text-xs">
                         {" "}
                         {order.dniTitular}
                       </p>
-                      <p className=" mt-2 uppercase font-mono">
+                      <p className=" mt-2 uppercase font-mono text-xs">
                         {" "}
                         {order.phone}
                       </p>
-                      <p className=" mt-2 uppercase font-mono">
+                      <p className=" mt-2 uppercase font-mono text-xs">
                         {order.address} {order.numberOfAddress}{" "}
                         {order.piso && order.piso}, {order.localidad},{" "}
                         {order.ciudad} {order.provincia}
                       </p>
-                      <p className="mt-2 uppercase font-mono">{order.email}</p>
+                      <p className="mt-2 uppercase font-mono text-xs">{order.email}</p>
                     </div>
                     <div className="bg-black h-1 rounded-full my-4 w-full" />
                     <p className="font-geist font-bold tracking-tighter text-2xl">
@@ -382,11 +385,11 @@ export const TableOrders = ({ orders }) => {
                       {order.orderItems.map((p) => (
                         <div className="flex w-full  flex-col" key={p.title}>
                           <div className="flex-col flex mt-5">
-                            <p className="font-mono capitalize font-bold">
+                            <p className="font-mono capitalize font-bold text-xs">
                               {" "}
                               {p.title} - ({p.quantity})
                             </p>
-                            <p className="font-mono capitalize font-bold">
+                            <p className="font-mono capitalize font-bold text-xs">
                               SKU: {p.sku}
                             </p>
                           </div>
