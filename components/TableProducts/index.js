@@ -29,6 +29,7 @@ import {
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import axios from "axios";
+import { formatPrice } from "@/app/utils/currency";
 const ProductForm = dynamic(
   () => import("@/components/ProductForm"),
   { ssr: false } // Solo si necesitas deshabilitar SSR para este componente.
@@ -70,12 +71,12 @@ const TableProducts = ({ products }) => {
         {products &&
           products.map((e) => (
             <TableRow key={e._id}>
-              <TableCell className="font-medium">{e.titulo}</TableCell>
-              <TableCell className="font-medium ">{e.categoria}</TableCell>
-              <TableCell className="font-medium">
+              <TableCell className="font-medium tracking-tighter">{e.titulo}</TableCell>
+              <TableCell className="font-medium tracking-tighter ">{e.categoria}</TableCell>
+              <TableCell className="font-medium tracking-tighter">
                 <img src={e.images[0]} alt="" className="w-[50px]" />
               </TableCell>
-              <TableCell className="font-medium">{e.precio}</TableCell>
+              <TableCell className="font-medium tracking-tighter">{formatPrice(e.precio)}</TableCell>
 
               <TableCell>
                 <Drawer className="max-h-[80vh]">

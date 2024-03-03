@@ -31,7 +31,7 @@ const orderSchema = new mongoose.Schema(
     piso: { type: String },
     estado: { type: String, default: "acreditado" },
     dniTitular: { type: String },
-    discountPrice: { type: Number, default: 0 },
+    discountPrice: { type: String, default: 0 },
     tracking: { type: String },
     codGestion: { type: String },
     token: { type: String },

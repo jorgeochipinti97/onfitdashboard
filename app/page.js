@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { TableOrders } from "@/components/TableOrders";
 import { useEffect, useState } from "react";
 import gsap, { Power1 } from "gsap";
+import { TableDiscount } from "@/components/DiscountCodes/TableDiscount";
 
 const ProductForm = dynamic(
   () => import("@/components/ProductForm"),
@@ -97,7 +98,7 @@ export default function Home() {
 
       <div
         className="royer bg-black min-h-screen flex-col  items-center pt-10 justify-start"
-        style={{ display: "none", opacity: 0 }}
+        style={{ display: "auto", opacity: 1 }}
       >
         <Drawer className="max-h-[80vh]">
           <DrawerTrigger className="flex items-center mb-10 bg-white p-2 rounded-xl">
@@ -129,7 +130,7 @@ export default function Home() {
           <TabsList className=" w-full">
             <TabsTrigger value="productos">Productos</TabsTrigger>
             <TabsTrigger value="ordenes">Ordenes</TabsTrigger>
-            <TabsTrigger value="datos">Datos</TabsTrigger>
+            <TabsTrigger value="discount">Codigos de descuento</TabsTrigger>
           </TabsList>
           <TabsContent value="productos">
             <TableProducts products={products} />
@@ -137,8 +138,8 @@ export default function Home() {
           <TabsContent value="ordenes">
             <TableOrders orders={orders} />
           </TabsContent>
-          <TabsContent value="datos">
-            <span className="text-white">datos </span>
+          <TabsContent value="discount">
+            <TableDiscount />
           </TabsContent>
         </Tabs>
       </div>
