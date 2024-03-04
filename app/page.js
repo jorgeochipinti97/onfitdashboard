@@ -98,7 +98,7 @@ export default function Home() {
 
       <div
         className="royer bg-black min-h-screen flex-col  items-center pt-10 justify-start"
-        style={{ display: "auto", opacity: 1 }}
+        style={{ display: "none", opacity: 0 }}
       >
         <Drawer className="max-h-[80vh]">
           <DrawerTrigger className="flex items-center mb-10 bg-white p-2 rounded-xl">

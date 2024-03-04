@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Importa los estilos CSS de React Quill
+import { Button } from "../ui/button";
 
 const ProductForm = ({ existingProduct }) => {
   const [imagesArray, setImagesArray] = useState(existingProduct?.images || []);
@@ -168,7 +169,11 @@ const ProductForm = ({ existingProduct }) => {
     const data = await response.json();
     setImagesArray(imagesArray.concat(data.secure_url));
   };
-
+  const removeImage = (index) => {
+    setImagesArray((currentImages) =>
+      currentImages.filter((_, i) => i !== index)
+    );
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -352,8 +357,11 @@ const ProductForm = ({ existingProduct }) => {
         />
         <div className="flex-1 flex w-full  ">
           {imagesArray &&
-            imagesArray.map((e) => (
-              <img key={e} src={e} alt="" className="mx-2 w-[50px]" />
+            imagesArray.map((e, index) => (
+              <div className="flex flex-col items-center justify-center mx-3">
+                <img key={e} src={e} alt="" className="mx-2 w-[50px]" />
+                <Button size={'sm'} className='mt-2' onClick={() => removeImage(index)}>Eliminar </Button>
+              </div>
             ))}
         </div>
       </div>
