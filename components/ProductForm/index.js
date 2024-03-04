@@ -358,8 +358,8 @@ const ProductForm = ({ existingProduct }) => {
         <div className="flex-1 flex w-full  ">
           {imagesArray &&
             imagesArray.map((e, index) => (
-              <div className="flex flex-col items-center justify-center mx-3">
-                <img key={e} src={e} alt="" className="mx-2 w-[50px]" />
+              <div  key={e}  className="flex flex-col items-center justify-center mx-3">
+                <img src={e} alt="" className="mx-2 w-[50px]" />
                 <Button size={'sm'} className='mt-2' onClick={() => removeImage(index)}>Eliminar </Button>
               </div>
             ))}
