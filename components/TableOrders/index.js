@@ -387,7 +387,7 @@ export const TableOrders = ({ orders }) => {
                           <div className="flex-col flex mt-5">
                             <p className="font-mono capitalize font-bold text-xs">
                               {" "}
-                              {p.title} - ({p.quantity})
+                              {p.title} {p.size} - ({p.quantity}) 
                             </p>
                             <p className="font-mono capitalize font-bold text-xs">
                               SKU: {p.sku}
