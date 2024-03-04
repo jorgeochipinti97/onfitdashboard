@@ -272,6 +272,7 @@ export const TableOrders = ({ orders }) => {
                       <SelectItem value="impreso">Impreso</SelectItem>
                       <SelectItem value="despachado">Despachado</SelectItem>
                       <SelectItem value="entregado">Entregado</SelectItem>
+                      <SelectItem value="nosotros">Entrega a cargo de nosotros</SelectItem>
                     </SelectContent>
                   </Select>
                 </TableCell>
