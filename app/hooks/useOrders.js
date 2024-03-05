@@ -11,7 +11,7 @@ export function useOrders() {
         let url = "/api/orders"; //
         const response = await axios.get(url);
         const orders_ = response.data;
-        console.log(response);
+
         setOrders(orders_);
       } catch (error) {
         console.error("Error fetching products:", error);

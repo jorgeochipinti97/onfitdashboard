@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import gsap, { Power1 } from "gsap";
 import { TableDiscount } from "@/components/DiscountCodes/TableDiscount";
 import { formatPrice } from "./utils/currency";
+import TableSell from "@/components/TableSell";
 
 const ProductForm = dynamic(
   () => import("@/components/ProductForm"),
@@ -35,6 +36,7 @@ export default function Home() {
   const [gananciasDia, setGananciasDia] = useState("");
   const [gananciasMes, setGananciasMes] = useState("");
   const [totalidad, setTotalidad] = useState("");
+  const [productosRank, setProductosRank] = useState("");
 
   function recaudacionDelMes(orders) {
     const startOfMonth = new Date();
@@ -74,32 +76,33 @@ export default function Home() {
   }
 
   function rankingProductosMasComprados(orders) {
-    // Acumulamos todos los orderItems en un solo array usando map y reduce
-    const allOrderItems = orders.reduce(
-      (acc, order) => [...acc, ...order.orderItems],
-      []
-    );
-
-    // Contamos las ocurrencias de cada producto usando reduce
+    const allOrderItems = orders.reduce((acc, order) => [...acc, ...order.orderItems], []);
+  
     const productCount = allOrderItems.reduce((acc, item) => {
       if (acc[item.title]) {
-        acc[item.title] += item.quantity;
+        acc[item.title].totalVendido += item.quantity;
       } else {
-        acc[item.title] = item.quantity;
+        // Verifica que item.images exista y tenga al menos un elemento antes de acceder a item.images[0]
+        const firstImage = item.image &&  item.image || "";
+        acc[item.title] = {
+          totalVendido: item.quantity,
+          image: firstImage, // Usa la primera imagen encontrada o una imagen predeterminada
+        };
       }
       return acc;
     }, {});
-
-    // Transformamos el objeto de conteo en un array de objetos y lo ordenamos
+  
     const sortedProducts = Object.entries(productCount)
-      .map(([title, totalVendido]) => ({
-        title,
-        totalVendido,
+      .map(([titulo, data]) => ({
+        titulo,
+        totalVendido: data.totalVendido,
+        image: data.image,
       }))
       .sort((a, b) => b.totalVendido - a.totalVendido);
-
+  
     return sortedProducts;
   }
+  
 
   useEffect(() => {
     if (orders) {
@@ -107,7 +110,7 @@ export default function Home() {
       const data1 = recaudacionDelMes(orders);
       const data2 = recaudacionDelDia(orders);
       const data3 = totalidadRecaudada(orders);
-      console.log(data);
+      setProductosRank(data)
       setGananciasDia(data2);
       setGananciasMes(data1);
       setTotalidad(data3);
@@ -167,7 +170,7 @@ export default function Home() {
   }, [password]);
   return (
     <>
-      <div className="bg-black h-screen dashboard" style={{}}>
+      {/* <div className="bg-black h-screen dashboard" style={{}}>
         <div className="flex justify-center h-full items-center">
           <div className="w-11/12 md:w-3/12">
             <Input
@@ -177,11 +180,11 @@ export default function Home() {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div
         className="royer bg-black min-h-screen flex-col  items-center pt-10 justify-start"
-        style={{ display: "none", opacity: 0 }}
+        style={{ display: "flex", opacity: 1 }}
       >
         <div className="flex justify-around mb-5">
           <div className=" flex-col p-5 rounded-md mx-2 bg-green-500/50">
@@ -234,6 +237,7 @@ export default function Home() {
             <TabsTrigger value="productos">Productos</TabsTrigger>
             <TabsTrigger value="ordenes">Ordenes</TabsTrigger>
             <TabsTrigger value="discount">Codigos de descuento</TabsTrigger>
+            <TabsTrigger value="vendidos">Mas vendidos</TabsTrigger>
           </TabsList>
           <TabsContent value="productos">
             <TableProducts products={products} />
@@ -244,14 +248,17 @@ export default function Home() {
           <TabsContent value="discount">
             <TableDiscount />
           </TabsContent>
+          <TabsContent value="vendidos">
+<TableSell products={productosRank}/>
+          </TabsContent>
         </Tabs>
       </div>
-      <div
+      {/* <div
         className="ementors bg-black min-h-screen flex-col  items-center pt-10 justify-start"
         style={{ display: "none", opacity: 0 }}
       >
         <TableOrders orders={orders} />
-      </div>
+      </div> */}
     </>
   );
 }
