@@ -16,8 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-
-
 import {
   Drawer,
   DrawerContent,
@@ -86,22 +84,26 @@ export const TableOrders = ({ orders }) => {
 
     // Importa html2pdf dinámicamente
     try {
-      const html2pdf = (await import('html2pdf.js')).default;
+      const html2pdf = (await import("html2pdf.js")).default;
 
       // Generar y descargar el PDF
-      html2pdf().from(element).set(opciones).save().then(() => {
-        // Una vez descargado el PDF, actualizar el estado de las órdenes
-        orders
-          .filter((order) => selectedOrders.includes(order._id))
-          .forEach((order) => {
-            handleChangeEstado(order._id, "impreso").catch(console.error);
-          });
-      }).catch(console.error);
+      html2pdf()
+        .from(element)
+        .set(opciones)
+        .save()
+        .then(() => {
+          // Una vez descargado el PDF, actualizar el estado de las órdenes
+          orders
+            .filter((order) => selectedOrders.includes(order._id))
+            .forEach((order) => {
+              handleChangeEstado(order._id, "impreso").catch(console.error);
+            });
+        })
+        .catch(console.error);
     } catch (error) {
       console.error("Error al cargar html2pdf:", error);
     }
   };
-
 
   function convertToCSV(orders, selectedOrders) {
     // Define los encabezados CSV basados en el texto proporcionado
@@ -135,7 +137,6 @@ export const TableOrders = ({ orders }) => {
       .forEach((order) => {
         // Agrega una fila por orden con la información de la orden y el primer producto
         order.orderItems.forEach((item, index) => {
-
           // Si es el primer producto, incluye toda la información de la orden
           if (index === 0) {
             const firstProductRow = [
@@ -272,7 +273,9 @@ export const TableOrders = ({ orders }) => {
                       <SelectItem value="impreso">Impreso</SelectItem>
                       <SelectItem value="despachado">Despachado</SelectItem>
                       <SelectItem value="entregado">Entregado</SelectItem>
-                      <SelectItem value="nosotros">Entrega a cargo de nosotros</SelectItem>
+                      <SelectItem value="nosotros">
+                        Entrega a cargo de nosotros
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </TableCell>
@@ -292,10 +295,25 @@ export const TableOrders = ({ orders }) => {
                         <DrawerDescription>
                           <div className="flex justify-around flex-col items-center">
                             <div>
+                              {e.cuotas && (
+                                <p className="mt-2">cuotas: {e.cuotas}</p>
+                              )}
+
+                              {e.discountCode && (
+                                <p className="mt-2">
+                                  Código de descuento: {e.discountCode}
+                                </p>
+                              )}
                               <p className="mt-2">Token: {e.token}</p>
                               <p className="mt-2">
                                 Total: {formatPrice(e.total)}
                               </p>
+                              {e.discountPrice && (
+                                <p className="mt-2">
+                                  Precio con descuento:{" "}
+                                  {formatPrice(e.discountPrice)}
+                                </p>
+                              )}
                               <p className=" mt-2">Nombre: {e.titular}</p>
                               <p className=" mt-2">DNI: {e.dniTitular}</p>
                               <p className=" mt-2">Celular: {e.phone}</p>
@@ -376,7 +394,9 @@ export const TableOrders = ({ orders }) => {
                         {order.piso && order.piso}, {order.localidad},{" "}
                         {order.ciudad} {order.provincia}
                       </p>
-                      <p className="mt-2 uppercase font-mono text-xs">{order.email}</p>
+                      <p className="mt-2 uppercase font-mono text-xs">
+                        {order.email}
+                      </p>
                     </div>
                     <div className="bg-black h-1 rounded-full my-4 w-full" />
                     <p className="font-geist font-bold tracking-tighter text-2xl">
@@ -388,7 +408,7 @@ export const TableOrders = ({ orders }) => {
                           <div className="flex-col flex mt-5">
                             <p className="font-mono capitalize font-bold text-xs">
                               {" "}
-                              {p.title} {p.size} - ({p.quantity}) 
+                              {p.title} {p.size} - ({p.quantity})
                             </p>
                             <p className="font-mono capitalize font-bold text-xs">
                               SKU: {p.sku}
