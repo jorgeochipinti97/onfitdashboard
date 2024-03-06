@@ -7,33 +7,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import React from "react";
 
-import React, { useEffect } from "react";
-import dynamic from "next/dynamic";
-import axios from "axios";
-import { formatPrice } from "@/app/utils/currency";
-const ProductForm = dynamic(
-  () => import("@/components/ProductForm"),
-  { ssr: false } // Solo si necesitas deshabilitar SSR para este componente.
-);
 
 const TableSell = ({ products }) => {
   return (

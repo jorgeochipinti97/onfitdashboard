@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Input } from "../ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
   Select,
@@ -10,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import axios from "axios";
 import { Button } from "../ui/button";
+import { DiscountCodeForm } from "../DiscountForm";
 
 export const TableDiscount = () => {
   const sucursales = [
@@ -42,6 +44,7 @@ export const TableDiscount = () => {
         valor: valor,
         isPercentaje: isPercentaje,
         sede: sede,
+        isUsed: false,
       }));
 
       const responses = await Promise.all(
@@ -110,49 +113,65 @@ export const TableDiscount = () => {
     document.body.removeChild(link);
   };
   return (
-    <div className="w-full flex justify-center">
-      <form className="bg-white w-6/12 p-5 rounded-xl" onSubmit={handleSubmit}>
-        <Select
-          onValueChange={(nuevoEstado) => setSede(nuevoEstado)}
-          value={`${sede}`}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {sucursales.map((e) => (
-              <SelectItem key={e} value={e}>
-                {e}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Input
-          placeholder="cantidad de códigos"
-          className="my-5"
-          onChange={(e) => setQuantity(e.target.value)}
-          value={quantity}
-        />
-        <Input
-          onChange={(e) => setValor(e.target.value)}
-          placeholder="valor"
-          className="my-5"
-          type="number"
-          value={valor}
-        />
-        <div className="flex items-center ">
-          <label className="mr-5 font-geist tracking-tighter">
-            Es Porcentaje ?
-          </label>
-          <input
-            type="checkbox"
-            onChange={(e) => setIsPercentaje(e.target.checked)}
-          />
-        </div>
-        <div className="mt-5">
-          <Button type="submit">Enviar</Button>
-        </div>
-      </form>
+    <div>
+      <Tabs defaultValue="sedes" className="w-[95vw]">
+        <TabsList className=" w-full">
+          <TabsTrigger value="sedes">Sedes</TabsTrigger>
+          <TabsTrigger value="influencers">Codigos personalizados</TabsTrigger>
+        </TabsList>
+        <TabsContent value="sedes">
+          <div className="w-full flex justify-center">
+            <form
+              className="bg-white w-6/12 p-5 rounded-xl"
+              onSubmit={handleSubmit}
+            >
+              <Select
+                onValueChange={(nuevoEstado) => setSede(nuevoEstado)}
+                value={`${sede}`}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {sucursales.map((e) => (
+                    <SelectItem key={e} value={e}>
+                      {e}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Input
+                placeholder="cantidad de códigos"
+                className="my-5"
+                onChange={(e) => setQuantity(e.target.value)}
+                value={quantity}
+              />
+              <Input
+                onChange={(e) => setValor(e.target.value)}
+                placeholder="valor"
+                className="my-5"
+                type="number"
+                value={valor}
+              />
+              <div className="flex items-center ">
+                <label className="mr-5 font-geist tracking-tighter">
+                  Es Porcentaje ?
+                </label>
+                <input
+                  type="checkbox"
+                  onChange={(e) => setIsPercentaje(e.target.checked)}
+                />
+              </div>
+              <div className="mt-5">
+                <Button type="submit">Enviar</Button>
+              </div>
+            </form>
+          </div>
+        </TabsContent>
+        <TabsContent value="influencers">
+          <DiscountCodeForm />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

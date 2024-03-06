@@ -188,13 +188,13 @@ export default function Home() {
       >
         <div className="flex justify-around mb-5">
           <div className=" flex-col p-5 rounded-md mx-2 bg-green-500/50">
-            <p className="text-white font-mono tracking-tighter text-center text-2xl">Total </p>
+            <p className="text-white font-mono tracking-tighter text-center text-2xl">Total</p>
             <p className="text-white font-geist mx-2">
               {formatPrice(totalidad)}
             </p>
           </div>
           <div className=" flex-col p-5 rounded-md mx-2 bg-green-500/50">
-            <p className="text-white font-mono tracking-tighter text-center text-2xl">En el mes</p>
+            <p className="text-white font-mono tracking-tighter text-center text-2xl">Mensual</p>
             <p className="text-white font-geist mx-2">
               {formatPrice(gananciasMes)}
             </p>
