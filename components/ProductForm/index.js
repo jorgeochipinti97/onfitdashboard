@@ -20,7 +20,8 @@ const ProductForm = ({ existingProduct }) => {
     tags: "",
     titulo: "",
     descripcion: "",
-    precio: "",
+    precio: 0,
+    precioDescuento: 0,
     productosRelacionados: "",
     talles: [{ nombre: "", stock: "" }],
   });
@@ -42,6 +43,7 @@ const ProductForm = ({ existingProduct }) => {
   };
   // Cargar datos del producto existente si se proporciona
   useEffect(() => {
+    console.log(existingProduct)
     if (existingProduct) {
       setProduct({
         ...existingProduct,
@@ -57,9 +59,9 @@ const ProductForm = ({ existingProduct }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "precio") {
-      setProduct({ ...product, [name]: Number(value) });
-    } else {
+    if (name === "precio" || name == "precioDescuento") {
+    setProduct({ ...product, [name]: Number(value) });
+  } else {
       setProduct({ ...product, [name]: value });
     }
 
@@ -311,6 +313,20 @@ const ProductForm = ({ existingProduct }) => {
           />
         </div>
       </div>
+      <div className="flex ">
+        <div>
+          <input
+            type="number"
+            name="precioDescuento"
+            id="precioDescuento"
+            required
+            placeholder="precio de descuento"
+            value={product.precioDescuento}
+            onChange={handleInputChange}
+            className=" mx-2  focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
+          />
+        </div>
+      </div>
       <div className="flex">
         {product &&
           product.talles.map((talle, index) => (
@@ -358,9 +374,18 @@ const ProductForm = ({ existingProduct }) => {
         <div className="flex-1 flex w-full  ">
           {imagesArray &&
             imagesArray.map((e, index) => (
-              <div  key={e}  className="flex flex-col items-center justify-center mx-3">
+              <div
+                key={e}
+                className="flex flex-col items-center justify-center mx-3"
+              >
                 <img src={e} alt="" className="mx-2 w-[50px]" />
-                <Button size={'sm'} className='mt-2' onClick={() => removeImage(index)}>Eliminar </Button>
+                <Button
+                  size={"sm"}
+                  className="mt-2"
+                  onClick={() => removeImage(index)}
+                >
+                  Eliminar{" "}
+                </Button>
               </div>
             ))}
         </div>

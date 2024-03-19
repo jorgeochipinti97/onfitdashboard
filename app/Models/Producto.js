@@ -7,6 +7,7 @@ const ProductSchema = new mongoose.Schema({
   slug: { type: String, unique: true },
   descripcion: { type: String, required: true },
   precio: { type: Number, required: true },
+  precioDescuento: { type: Number, default:0  },
   categoria: { type: String, required: true },
   subcategoria: { type: String},
   productosRelacionados: [{ type: String }],
