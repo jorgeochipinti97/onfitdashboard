@@ -28,7 +28,7 @@ export const DiscountCodeForm = () => {
       ...formValues,
       sede: "onfit",
     });
-    console.log(data); // Para propósitos de demostración
+    console.log(data);
   };
 
   return (
@@ -49,17 +49,18 @@ export const DiscountCodeForm = () => {
       </div>
       <div className="w-12/12 flex justify-center mt-5">
         <div className="w-6/12">
+          <label>Cantidad de usos</label>
           <Input
             type="number"
             name="usos"
             value={formValues.usos}
             onChange={handleChange}
-            placeholder="Usos"
-          />
+            />
         </div>
       </div>
       <div className="w-12/12 flex justify-center mt-5">
         <div className="w-6/12">
+            <label>Valor</label>
           <Input
             type="number"
             name="valor"
