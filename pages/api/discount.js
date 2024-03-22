@@ -1,8 +1,5 @@
-import Counter from "@/app/Models/Counter";
 import DiscountCodeOnfit from "@/app/Models/DiscountCodes";
-import OrderOnfit from "@/app/Models/Order";
 import { db } from "@/app/database";
-
 export default function handler(req, res) {
   switch (req.method) {
     case "POST":

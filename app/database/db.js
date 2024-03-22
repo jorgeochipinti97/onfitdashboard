@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-
-
 const mongoConnection = {
   isConnected: 0,
 };
@@ -12,7 +10,11 @@ export const connectDB = async () => {
       console.log("Ya estabamos conectados");
       return;
     }
-    await mongoose.connect(process.env.MONGO_URI_NEW || "");
+    await mongoose.connect(process.env.MONGO_URI_NEW || "", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 20000,
+    });
     mongoConnection.isConnected = 1;
     console.log("Conectado a MongoDB:", process.env.MONGO_URI_NEW);
   } catch (err) {

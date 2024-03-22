@@ -33,28 +33,33 @@ export const TableDiscount = () => {
   ];
   const [sede, setSede] = useState("obelisco");
   const [valor, setValor] = useState("");
-  const [quantity, setQuantity] = useState("");
+
   const [isPercentaje, setIsPercentaje] = useState(false);
 
-  const createCodes = async (cantidad) => {
-    // Genera un array de códigos de descuento
+  const BATCH_SIZE = 50; // Define el tamaño de cada lote
 
+  const createCodes = async (cantidad) => {
     try {
-      const discountCodes = Array.from({ length: quantity }, () => ({
+      const discountCodes = Array.from({ length: cantidad }, () => ({
         valor: valor,
         isPercentaje: isPercentaje,
         sede: sede,
         isUsed: false,
       }));
-
-      const responses = await Promise.all(
-        discountCodes.map((discountCode) =>
-          axios.post("/api/discount", discountCode)
-        )
-      );
-
-      const codigos = responses.map((response) => response.data);
-      codigos && handleExportSelected(codigos);
+  
+      // Divide los códigos en lotes para enviarlos por separado
+      for (let i = 0; i < discountCodes.length; i += BATCH_SIZE) {
+        const batch = discountCodes.slice(i, i + BATCH_SIZE);
+  
+        const responses = await Promise.all(
+          batch.map(discountCode =>
+            axios.post("/api/discount", discountCode)
+          )
+        );
+  
+        const codigos = responses.map(response => response.data);
+        codigos && handleExportSelected(codigos);
+      }
     } catch (error) {
       console.error("Error al crear códigos de descuento:", error);
     }
@@ -112,6 +117,8 @@ export const TableDiscount = () => {
     link.click();
     document.body.removeChild(link);
   };
+
+  
   return (
     <div>
       <Tabs defaultValue="sedes" className="w-[95vw]">
@@ -140,12 +147,6 @@ export const TableDiscount = () => {
                   ))}
                 </SelectContent>
               </Select>
-              <Input
-                placeholder="cantidad de códigos"
-                className="my-5"
-                onChange={(e) => setQuantity(e.target.value)}
-                value={quantity}
-              />
               <Input
                 onChange={(e) => setValor(e.target.value)}
                 placeholder="valor"
