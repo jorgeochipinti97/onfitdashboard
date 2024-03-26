@@ -46,18 +46,16 @@ export const TableDiscount = () => {
         sede: sede,
         isUsed: false,
       }));
-  
+
       // Divide los códigos en lotes para enviarlos por separado
       for (let i = 0; i < discountCodes.length; i += BATCH_SIZE) {
         const batch = discountCodes.slice(i, i + BATCH_SIZE);
-  
+
         const responses = await Promise.all(
-          batch.map(discountCode =>
-            axios.post("/api/discount", discountCode)
-          )
+          batch.map((discountCode) => axios.post("/api/discount", discountCode))
         );
-  
-        const codigos = responses.map(response => response.data);
+
+        const codigos = responses.map((response) => response.data);
         codigos && handleExportSelected(codigos);
       }
     } catch (error) {
@@ -118,61 +116,9 @@ export const TableDiscount = () => {
     document.body.removeChild(link);
   };
 
-  
   return (
     <div>
-      <Tabs defaultValue="sedes" className="w-[95vw]">
-        <TabsList className=" w-full">
-          <TabsTrigger value="sedes">Sedes</TabsTrigger>
-          <TabsTrigger value="influencers">Codigos personalizados</TabsTrigger>
-        </TabsList>
-        <TabsContent value="sedes">
-          <div className="w-full flex justify-center">
-            <form
-              className="bg-white w-6/12 p-5 rounded-xl"
-              onSubmit={handleSubmit}
-            >
-              <Select
-                onValueChange={(nuevoEstado) => setSede(nuevoEstado)}
-                value={`${sede}`}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {sucursales.map((e) => (
-                    <SelectItem key={e} value={e}>
-                      {e}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Input
-                onChange={(e) => setValor(e.target.value)}
-                placeholder="valor"
-                className="my-5"
-                type="number"
-                value={valor}
-              />
-              <div className="flex items-center ">
-                <label className="mr-5 font-geist tracking-tighter">
-                  Es Porcentaje ?
-                </label>
-                <input
-                  type="checkbox"
-                  onChange={(e) => setIsPercentaje(e.target.checked)}
-                />
-              </div>
-              <div className="mt-5">
-                <Button type="submit">Enviar</Button>
-              </div>
-            </form>
-          </div>
-        </TabsContent>
-        <TabsContent value="influencers">
-          <DiscountCodeForm />
-        </TabsContent>
-      </Tabs>
+      <DiscountCodeForm />
     </div>
   );
 };

@@ -4,13 +4,19 @@ import { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import axios from "axios";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 export const DiscountCodeForm = () => {
   const [formValues, setFormValues] = useState({
     name: "",
     usos: 0,
     valor: 0,
-    isPercentage: false,
+    isPercentaje: false,
   });
 
   const handleChange = (e) => {
@@ -26,10 +32,30 @@ export const DiscountCodeForm = () => {
 
     const data = await axios.post("/api/discount", {
       ...formValues,
-      sede: "onfit",
+      sede: sede,
     });
     console.log(data);
   };
+
+  const sucursales = [
+    "obelisco",
+    "almagro",
+    "colegiales",
+    "lomas de zamora",
+    "flores",
+    "plaza de mayo",
+    "pilar",
+    "olivos",
+    "congreso",
+    "saavedra",
+    "la plata",
+    "parque patricios",
+    "quilmes",
+    "maschwitz",
+    "morón",
+    "onfit"
+  ];
+  const [sede, setSede] = useState("obelisco");
 
   return (
     <form
@@ -48,6 +74,23 @@ export const DiscountCodeForm = () => {
         </div>
       </div>
       <div className="w-12/12 flex justify-center mt-5">
+        <Select
+          onValueChange={(nuevoEstado) => setSede(nuevoEstado)}
+          value={`${sede}`}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {sucursales.map((e) => (
+              <SelectItem key={e} value={e}>
+                {e}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="w-12/12 flex justify-center mt-5">
         <div className="w-6/12">
           <label>Cantidad de usos</label>
           <Input
@@ -55,12 +98,12 @@ export const DiscountCodeForm = () => {
             name="usos"
             value={formValues.usos}
             onChange={handleChange}
-            />
+          />
         </div>
       </div>
       <div className="w-12/12 flex justify-center mt-5">
         <div className="w-6/12">
-            <label>Valor</label>
+          <label>Valor</label>
           <Input
             type="number"
             name="valor"
@@ -77,9 +120,8 @@ export const DiscountCodeForm = () => {
             Es porcentaje:
             <input
               type="checkbox"
-              className="ml-2"
-              name="isPercentage"
-              checked={formValues.isPercentage}
+              name="isPercentaje"
+              checked={formValues.isPercentaje}
               onChange={handleChange}
             />
           </label>
