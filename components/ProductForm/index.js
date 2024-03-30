@@ -129,7 +129,7 @@ const ProductForm = ({ existingProduct }) => {
         formData.append("upload_preset", "ml_default");
 
         const response = await fetch(
-          "https://api.cloudinary.com/v1_1/duptnofi0/image/upload",
+          "https://api.cloudinary.com/v1_1/dey28u2zn/image/upload",
           {
             method: "POST",
             body: formData,
