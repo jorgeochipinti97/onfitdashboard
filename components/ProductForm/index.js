@@ -43,7 +43,7 @@ const ProductForm = ({ existingProduct }) => {
   };
   // Cargar datos del producto existente si se proporciona
   useEffect(() => {
-    console.log(existingProduct)
+    console.log(existingProduct);
     if (existingProduct) {
       setProduct({
         ...existingProduct,
@@ -60,8 +60,8 @@ const ProductForm = ({ existingProduct }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "precio" || name == "precioDescuento") {
-    setProduct({ ...product, [name]: Number(value) });
-  } else {
+      setProduct({ ...product, [name]: Number(value) });
+    } else {
       setProduct({ ...product, [name]: value });
     }
 
@@ -106,6 +106,9 @@ const ProductForm = ({ existingProduct }) => {
         return ["fitness", "maquinas"];
       case "suplementos":
         return ["proteina", "creatina"];
+      case "accesorios":
+        return ["accesorios"];
+
       default:
         return [];
     }
@@ -261,13 +264,13 @@ const ProductForm = ({ existingProduct }) => {
             <option value="accesorios">Accesorios</option>
           </select>
         </div>
-        <div style={{ display: categoria == "accesorios" ? "none" : "block" }}>
+        <div style={{ }}>
           <select
             name="subcategoria"
             id="subcategoria"
             placeholder="subcategoria"
             required
-            value={subcategoria}
+            value={ subcategoria}
             onChange={(e) => setSubcategoria(e.target.value)}
             className=" mx-2 block w-full pl-3 pr-10 py-2 text-base border-gray-800 border p-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
           >
