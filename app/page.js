@@ -76,14 +76,17 @@ export default function Home() {
   }
 
   function rankingProductosMasComprados(orders) {
-    const allOrderItems = orders.reduce((acc, order) => [...acc, ...order.orderItems], []);
-  
+    const allOrderItems = orders.reduce(
+      (acc, order) => [...acc, ...order.orderItems],
+      []
+    );
+
     const productCount = allOrderItems.reduce((acc, item) => {
       if (acc[item.title]) {
         acc[item.title].totalVendido += item.quantity;
       } else {
         // Verifica que item.images exista y tenga al menos un elemento antes de acceder a item.images[0]
-        const firstImage = item.image &&  item.image || "";
+        const firstImage = (item.image && item.image) || "";
         acc[item.title] = {
           totalVendido: item.quantity,
           image: firstImage, // Usa la primera imagen encontrada o una imagen predeterminada
@@ -91,7 +94,7 @@ export default function Home() {
       }
       return acc;
     }, {});
-  
+
     const sortedProducts = Object.entries(productCount)
       .map(([titulo, data]) => ({
         titulo,
@@ -99,10 +102,9 @@ export default function Home() {
         image: data.image,
       }))
       .sort((a, b) => b.totalVendido - a.totalVendido);
-  
+
     return sortedProducts;
   }
-  
 
   useEffect(() => {
     if (orders) {
@@ -110,7 +112,7 @@ export default function Home() {
       const data1 = recaudacionDelMes(orders);
       const data2 = recaudacionDelDia(orders);
       const data3 = totalidadRecaudada(orders);
-      setProductosRank(data)
+      setProductosRank(data);
       setGananciasDia(data2);
       setGananciasMes(data1);
       setTotalidad(data3);
@@ -167,6 +169,25 @@ export default function Home() {
         display: "none",
         ease: Power1.easeIn,
       });
+    password == "onfit" &&
+      gsap.to(".onfit", {
+        delay: 0.5,
+        display: "flex",
+        ease: Power1.easeIn,
+      });
+    password == "onfit" &&
+      gsap.to(".onfit", {
+        delay: 1,
+        opacity: 1,
+        ease: Power1.easeIn,
+      });
+
+    password == "onfit" &&
+      gsap.to(".dashboard", {
+        delay: 0.5,
+        display: "none",
+        ease: Power1.easeIn,
+      });
   }, [password]);
   return (
     <>
@@ -184,23 +205,29 @@ export default function Home() {
 
       <div
         className="royer bg-black min-h-screen flex-col  items-center pt-10 justify-start"
-        style={{ display: "none", opacity:0 }}
+        style={{ display: "none", opacity: 0 }}
       >
         <div className="flex justify-around mb-5">
           <div className=" flex-col p-5 rounded-md mx-2 bg-green-500/50">
-            <p className="text-white font-mono tracking-tighter text-center text-2xl">Total</p>
+            <p className="text-white font-mono tracking-tighter text-center text-2xl">
+              Total
+            </p>
             <p className="text-white font-geist mx-2">
               {formatPrice(totalidad)}
             </p>
           </div>
           <div className=" flex-col p-5 rounded-md mx-2 bg-green-500/50">
-            <p className="text-white font-mono tracking-tighter text-center text-2xl">Mensual</p>
+            <p className="text-white font-mono tracking-tighter text-center text-2xl">
+              Mensual
+            </p>
             <p className="text-white font-geist mx-2">
               {formatPrice(gananciasMes)}
             </p>
           </div>
           <div className=" flex-col p-5 rounded-md mx-2 bg-green-500/50">
-            <p className="text-white font-mono tracking-tighter text-center text-2xl">Hoy</p>
+            <p className="text-white font-mono tracking-tighter text-center text-2xl">
+              Hoy
+            </p>
             <p className="text-white font-geist mx-2">
               {formatPrice(gananciasDia)}
             </p>
@@ -249,7 +276,7 @@ export default function Home() {
             <TableDiscount />
           </TabsContent>
           <TabsContent value="vendidos">
-<TableSell products={productosRank}/>
+            <TableSell products={productosRank} />
           </TabsContent>
         </Tabs>
       </div>
@@ -258,6 +285,13 @@ export default function Home() {
         style={{ display: "none", opacity: 0 }}
       >
         <TableOrders orders={orders} />
+      </div>
+
+      <div
+        className="onfit bg-black min-h-screen flex-col  items-center pt-10 justify-start"
+        style={{ display: "none", opacity: 0 }}
+      >
+        <TableOrders orders={orders} password={password} />
       </div>
     </>
   );

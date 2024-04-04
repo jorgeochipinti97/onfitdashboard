@@ -31,21 +31,33 @@ import { Button } from "../ui/button";
 import { formatPrice } from "@/app/utils/currency";
 import dynamic from "next/dynamic";
 
-export const TableOrders = ({ orders }) => {
+export const TableOrders = ({ orders, password }) => {
   const [selectedOrders, setSelectedOrders] = useState([]);
-  const [date, setDate] = useState(new Date());
-  const [end, setEnd] = useState(new Date());
+  const [mes, selectMes] = useState("1");
 
+  const filterOrdersByMonth = (orders, month, year) => {
+
+    const filtered = orders.filter((order) => {
+      const createdAt = new Date(order.createdAt);
+      console.log(
+        `Fecha de creación: ${createdAt}, Mes: ${createdAt.getMonth()}, Año: ${createdAt.getFullYear()}`
+      );
+      return createdAt.getMonth() === month && createdAt.getFullYear() === year;
+    });
+
+
+    return filtered;
+  };
   const formatDate = (dateString) => {
     const options = {
       year: "numeric",
       month: "long",
       day: "numeric",
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     };
-        return new Date(dateString).toLocaleDateString(undefined, options);
+    return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   const handleCheckboxChange = (orderId) => {
@@ -112,7 +124,7 @@ export const TableOrders = ({ orders }) => {
     }
   };
 
-  function convertToCSV(orders, selectedOrders) {
+  function convertToCSV(orders) {
     // Define los encabezados CSV basados en el texto proporcionado
     const headers = [
       "Número de orden",
@@ -138,72 +150,86 @@ export const TableOrders = ({ orders }) => {
 
     let rows = [];
 
-    // Filtra solo las órdenes seleccionadas y itera sobre ellas
-    orders
-      .filter((order) => selectedOrders.includes(order._id))
-      .forEach((order) => {
-        // Agrega una fila por orden con la información de la orden y el primer producto
-        order.orderItems.forEach((item, index) => {
-          // Si es el primer producto, incluye toda la información de la orden
-          if (index === 0) {
-            const firstProductRow = [
-              order.codGestion,
-              order.email,
-              `"${formatDate(order.createdAt)}"`, // Asegúrate de formatear la fecha según sea necesario
-              order.estado,
-              order.titular,
-              order.dniTitular,
-              order.phone,
-              order.address,
-              order.numberOfAddress,
-              order.piso,
-              order.localidad,
-              order.ciudad,
-              order.postalCode,
-              order.provincia,
-              "Urbano express | Entrega",
-              `${item.title} - ${item.size}`,
-              item.quantity,
-              item.sku || "",
-              order._id,
-            ];
-            rows.push(firstProductRow.join(","));
-          } else {
-            // Para productos subsiguientes, solo incluye los detalles del producto
-            const subsequentProductRow = [
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "", // Campos vacíos para la información de la orden
-              `${item.title} - ${item.size}`,
-              item.quantity,
-              item.sku || "",
-              "", // Campo vacío para el identificador de la orden, asumiendo que no se repite
-            ];
-            rows.push(subsequentProductRow.join(","));
-          }
-        });
+    // Itera sobre el conjunto de órdenes proporcionado
+    orders.forEach((order) => {
+      // Agrega una fila por orden con la información de la orden y el primer producto
+      order.orderItems.forEach((item, index) => {
+        if (index === 0) {
+          const firstProductRow = [
+            order.codGestion,
+            order.email,
+            `"${formatDate(order.createdAt)}"`, // Asegúrate de formatear la fecha según sea necesario
+            order.estado,
+            order.titular,
+            order.dniTitular,
+            order.phone,
+            order.address,
+            order.numberOfAddress,
+            order.piso,
+            order.localidad,
+            order.ciudad,
+            order.postalCode,
+            order.provincia,
+            "Urbano express | Entrega",
+            `${item.title} - ${item.size}`,
+            item.quantity,
+            item.sku || "",
+            order._id,
+          ];
+          rows.push(firstProductRow.join(","));
+        } else {
+          const subsequentProductRow = [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "", // Campos vacíos para la información de la orden
+            `${item.title} - ${item.size}`,
+            item.quantity,
+            item.sku || "",
+            "", // Campo vacío para el identificador de la orden, asumiendo que no se repite
+          ];
+          rows.push(subsequentProductRow.join(","));
+        }
       });
+    });
 
     // Une los encabezados con las filas para crear la cadena CSV final
     return [headers.join(",")].concat(rows).join("\n");
   }
 
+  const handleExportSelectedByMonth = (orders,month, year) => {
+    const filteredOrders = filterOrdersByMonth(orders, month, year);
+    console.log(filteredOrders);
+    const fechaActual = new Date();
+    const fechaFormateada = `${year}-${month + 1}-${fechaActual.getDate()}`; // Ajuste para que el mes sea legible (1-12)
+    console.log(filteredOrders);
+    const csvString = convertToCSV(filteredOrders);
+    const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+
+    const link = document.createElement("a");
+    link.setAttribute("href", URL.createObjectURL(blob));
+    // Modificar el nombre de archivo para reflejar el filtrado por mes y año
+    link.setAttribute("download", `tiendaonfit-${year}-${month + 1}.csv`);
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleExportSelected = () => {
     const fechaActual = new Date();
     const fechaFormateada = fechaActual.toISOString().split("T")[0];
-    const csvString = convertToCSV(orders, selectedOrders);
+    const csvString = convertToCSV(selectedOrders);
     const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.setAttribute("href", URL.createObjectURL(blob));
@@ -219,12 +245,39 @@ export const TableOrders = ({ orders }) => {
         <Button className="my-10 text-white" onClick={handleExportSelected}>
           Exportar Seleccionados a CSV
         </Button>
-        <Button
-          className="my-10 text-white"
-          onClick={exportarAPdfYActualizarOrdenes}
-        >
-          Imprimir etiquetas
-        </Button>
+        <div>
+          <Select onValueChange={(e) => selectMes(e)} value={mes}>
+            <SelectTrigger className="w-[180px]">Elije el mes</SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">Enero</SelectItem>
+              <SelectItem value="2">Febrero</SelectItem>
+              <SelectItem value="3">Marzo</SelectItem>
+              <SelectItem value="4">Abril</SelectItem>
+              <SelectItem value="5">Mayo</SelectItem>
+              <SelectItem value="6">Junio</SelectItem>
+              <SelectItem value="7">Julio</SelectItem>
+              <SelectItem value="8">Agosto</SelectItem>
+              <SelectItem value="9">Septiembre</SelectItem>
+              <SelectItem value="10">Octubre</SelectItem>
+              <SelectItem value="11">Noviembre</SelectItem>
+              <SelectItem value="12">Diciembre</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            className="my-10 text-white"
+            onClick={() => handleExportSelectedByMonth(orders, Number(mes) - 1, 2024)}
+            >
+            Exportar a CSV
+          </Button>
+        </div>
+        {password != "onfit" && (
+          <Button
+            className="my-10 text-white"
+            onClick={exportarAPdfYActualizarOrdenes}
+          >
+            Imprimir etiquetas
+          </Button>
+        )}
       </div>
       <Table className="bg-white">
         <TableCaption>Lista de Ordenes.</TableCaption>
@@ -266,6 +319,7 @@ export const TableOrders = ({ orders }) => {
                 </TableCell>
                 <TableCell className="font-medium ">
                   <Select
+                    disabled={password == "onfit"}
                     key={e._id}
                     onValueChange={(nuevoEstado) =>
                       handleChangeEstado(e._id, nuevoEstado)
