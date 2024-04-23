@@ -20,6 +20,10 @@ import { TableDiscount } from "@/components/DiscountCodes/TableDiscount";
 import { formatPrice } from "./utils/currency";
 import TableSell from "@/components/TableSell";
 
+
+
+
+
 const ProductForm = dynamic(
   () => import("@/components/ProductForm"),
   { ssr: false } // Solo si necesitas deshabilitar SSR para este componente.
@@ -280,6 +284,8 @@ export default function Home() {
           </TabsContent>
         </Tabs>
       </div>
+
+      
       <div
         className="ementors bg-black min-h-screen flex-col  items-center pt-10 justify-start"
         style={{ display: "none", opacity: 0 }}

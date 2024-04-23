@@ -3,6 +3,7 @@ import { FileUploader } from "react-drag-drop-files";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Importa los estilos CSS de React Quill
 import { Button } from "../ui/button";
+import { ScrollArea } from "../ui/scroll-area";
 
 const ProductForm = ({ existingProduct }) => {
   const [imagesArray, setImagesArray] = useState(existingProduct?.images || []);
@@ -224,6 +225,7 @@ const ProductForm = ({ existingProduct }) => {
   };
 
   return (
+    <ScrollArea className='h-[80vh]'>
     <form onSubmit={handleSubmit} className="space-y-4 max-h-[90vh]">
       {/* Título */}
       <div className="w-full justify-around flex">
@@ -304,6 +306,7 @@ const ProductForm = ({ existingProduct }) => {
       {/* Categoría */}
       <div className="flex ">
         <div>
+          <label>Precio</label>
           <input
             type="number"
             name="precio"
@@ -313,11 +316,12 @@ const ProductForm = ({ existingProduct }) => {
             value={product.precio}
             onChange={handleInputChange}
             className=" mx-2  focus:ring-indigo-500 focus:border-indigo-500 block w-fit shadow-sm sm:text-sm border-gray-800 border p-2 rounded-md"
-          />
+            />
         </div>
       </div>
       <div className="flex ">
         <div>
+            <label>Precio con descuento</label>
           <input
             type="number"
             name="precioDescuento"
@@ -404,6 +408,7 @@ const ProductForm = ({ existingProduct }) => {
         </button>
       </div>
     </form>
+    </ScrollArea>
   );
 };
 

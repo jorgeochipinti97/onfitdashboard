@@ -1,3 +1,5 @@
+import XLSX from "xlsx";
+
 import {
   Table,
   TableBody,
@@ -36,7 +38,6 @@ export const TableOrders = ({ orders, password }) => {
   const [mes, selectMes] = useState("1");
 
   const filterOrdersByMonth = (orders, month, year) => {
-
     const filtered = orders.filter((order) => {
       const createdAt = new Date(order.createdAt);
       console.log(
@@ -44,7 +45,6 @@ export const TableOrders = ({ orders, password }) => {
       );
       return createdAt.getMonth() === month && createdAt.getFullYear() === year;
     });
-
 
     return filtered;
   };
@@ -207,7 +207,7 @@ export const TableOrders = ({ orders, password }) => {
     return [headers.join(",")].concat(rows).join("\n");
   }
 
-  const handleExportSelectedByMonth = (orders,month, year) => {
+  const handleExportSelectedByMonth = (orders, month, year) => {
     const filteredOrders = filterOrdersByMonth(orders, month, year);
     console.log(filteredOrders);
     const fechaActual = new Date();
@@ -239,6 +239,47 @@ export const TableOrders = ({ orders, password }) => {
     document.body.removeChild(link);
   };
 
+  const handleExportSelectedToExcel = (orders, month, year) => {
+    const filteredOrders = filterOrdersByMonth(orders, month, year);
+
+    // Convert orders data to a format suitable for Excel
+    const data = filteredOrders.map((order) => ({
+      "Número de orden": order.codGestion,
+      Email: order.email,
+      Fecha: formatDate(order.createdAt),
+      "Estado del envío": order.estado,
+      "Nombre del comprador": order.titular,
+      DNI: order.dniTitular,
+      celular: order.phone,
+      Direccion: order.address,
+      Numero: order.numberOfAddress,
+      Piso: order.piso,
+      LocalidadL: order.localidad,
+      Ciudad: order.ciudad,
+      "Codigo postal": order.postalCode,
+      Provincia: order.provincia,
+    }));
+
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Orders");
+
+    // Generate buffer
+    const wbout = XLSX.write(workbook, { type: "array", bookType: "xlsx" });
+
+    // Create a Blob and download it
+    const blob = new Blob([wbout], { type: "application/octet-stream" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    const fechaActual = new Date();
+    const fechaFormateada = `${year}-${month + 1}-${fechaActual.getDate()}`;
+    link.download = `tiendaonfit-${fechaFormateada}.xlsx`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <div className="bg-slate-200">
       <div className="flex items-center justify-around py-10">
@@ -265,9 +306,11 @@ export const TableOrders = ({ orders, password }) => {
           </Select>
           <Button
             className="my-10 text-white"
-            onClick={() => handleExportSelectedByMonth(orders, Number(mes) - 1, 2024)}
-            >
-            Exportar a CSV
+            onClick={() =>
+              handleExportSelectedToExcel(orders, Number(mes) - 1, 2024)
+            }
+          >
+            Exportar a EXCEL
           </Button>
         </div>
         {password != "onfit" && (
