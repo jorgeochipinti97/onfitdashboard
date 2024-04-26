@@ -166,7 +166,7 @@ const ProductForm = ({ existingProduct }) => {
     formData.append("upload_preset", "ml_default"); // Reemplaza 'your_preset_here' con tu preset de Cloudinary
     // Cambia 'your_cloud_name' por tu nombre de cloud de Cloudinary en la URL
     const response = await fetch(
-      "https://api.cloudinary.com/v1_1/duptnofi0/image/upload",
+      "https://api.cloudinary.com/v1_1/dwtnrs4ix/image/upload",
       {
         method: "POST",
         body: formData,
