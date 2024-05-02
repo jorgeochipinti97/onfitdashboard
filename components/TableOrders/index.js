@@ -166,7 +166,7 @@ export const TableOrders = ({ orders, password }) => {
       "Codigo postal": order.postalCode,
       Provincia: order.provincia,
     }));
-    exportToExcel(data, `Tienda Onfit - ${monthNames[selectedMonth]} - 2024`);
+    exportToExcel(data, `Tienda Onfit - ${monthNames[selectedMonth]} 2024`);
   }
   const monthNames = [
     "", // Index 0 - no month
