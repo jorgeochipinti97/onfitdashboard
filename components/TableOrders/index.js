@@ -1,4 +1,4 @@
-import XLSX from "xlsx";
+import * as XLSX from "xlsx";
 
 import {
   Table,
@@ -35,19 +35,13 @@ import dynamic from "next/dynamic";
 
 export const TableOrders = ({ orders, password }) => {
   const [selectedOrders, setSelectedOrders] = useState([]);
-  const [mes, selectMes] = useState("1");
+  const [selectedMonth, setSelectedMonth] = useState("");
 
-  const filterOrdersByMonth = (orders, month, year) => {
-    const filtered = orders.filter((order) => {
-      const createdAt = new Date(order.createdAt);
-      console.log(
-        `Fecha de creación: ${createdAt}, Mes: ${createdAt.getMonth()}, Año: ${createdAt.getFullYear()}`
-      );
-      return createdAt.getMonth() === month && createdAt.getFullYear() === year;
-    });
-
-    return filtered;
+  const selectMes = (value) => {
+    const monthNumber = parseInt(value, 10); // Convert string to number
+    setSelectedMonth(monthNumber); // Update state with number
   };
+
   const formatDate = (dateString) => {
     const options = {
       year: "numeric",
@@ -124,131 +118,44 @@ export const TableOrders = ({ orders, password }) => {
     }
   };
 
-  function convertToCSV(orders) {
-    // Define los encabezados CSV basados en el texto proporcionado
-    const headers = [
-      "Número de orden",
-      "Email",
-      "Fecha",
-      "Estado del envío",
-      "Nombre del comprador",
-      "DNI / CUIT",
-      "Teléfono",
-      "Dirección",
-      "Número",
-      "Piso",
-      "Localidad",
-      "Ciudad",
-      "Código postal",
-      "Provincia o estado",
-      "Medio de envío",
-      "Nombre del producto",
-      "Cantidad del producto",
-      "SKU",
-      "Identificador de la orden",
-    ];
+  function exportToExcel(data, fileName) {
+    // Create a new workbook
+    const wb = XLSX.utils.book_new();
 
-    let rows = [];
+    // Convert data to a worksheet
+    const ws = XLSX.utils.json_to_sheet(data);
 
-    // Itera sobre el conjunto de órdenes proporcionado
-    orders.forEach((order) => {
-      // Agrega una fila por orden con la información de la orden y el primer producto
-      order.orderItems.forEach((item, index) => {
-        if (index === 0) {
-          const firstProductRow = [
-            order.codGestion,
-            order.email,
-            `"${formatDate(order.createdAt)}"`, // Asegúrate de formatear la fecha según sea necesario
-            order.estado,
-            order.titular,
-            order.dniTitular,
-            order.phone,
-            order.address,
-            order.numberOfAddress,
-            order.piso,
-            order.localidad,
-            order.ciudad,
-            order.postalCode,
-            order.provincia,
-            "Urbano express | Entrega",
-            `${item.title} - ${item.size}`,
-            item.quantity,
-            item.sku || "",
-            order._id,
-          ];
-          rows.push(firstProductRow.join(","));
-        } else {
-          const subsequentProductRow = [
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "", // Campos vacíos para la información de la orden
-            `${item.title} - ${item.size}`,
-            item.quantity,
-            item.sku || "",
-            "", // Campo vacío para el identificador de la orden, asumiendo que no se repite
-          ];
-          rows.push(subsequentProductRow.join(","));
-        }
-      });
-    });
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
 
-    // Une los encabezados con las filas para crear la cadena CSV final
-    return [headers.join(",")].concat(rows).join("\n");
+    // Write the workbook and initiate download
+    XLSX.writeFile(wb, `${fileName}.xlsx`);
   }
 
-  const handleExportSelectedByMonth = (orders, month, year) => {
-    const filteredOrders = filterOrdersByMonth(orders, month, year);
-    console.log(filteredOrders);
-    const fechaActual = new Date();
-    const fechaFormateada = `${year}-${month + 1}-${fechaActual.getDate()}`; // Ajuste para que el mes sea legible (1-12)
-    console.log(filteredOrders);
-    const csvString = convertToCSV(filteredOrders);
-    const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+  function handleExport(mes) {
+    const monthNumber = mes;
 
-    const link = document.createElement("a");
-    link.setAttribute("href", URL.createObjectURL(blob));
-    // Modificar el nombre de archivo para reflejar el filtrado por mes y año
-    link.setAttribute("download", `tiendaonfit-${year}-${month + 1}.csv`);
+    const filteredOrders = orders.filter((order) => {
+      const orderDate = new Date(order.createdAt);
 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
-  const handleExportSelected = () => {
-    const fechaActual = new Date();
-    const fechaFormateada = fechaActual.toISOString().split("T")[0];
-    const csvString = convertToCSV(selectedOrders);
-    const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.setAttribute("href", URL.createObjectURL(blob));
-    link.setAttribute("download", `tiendaonfit-${fechaFormateada}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
-  const handleExportSelectedToExcel = (orders, month, year) => {
-    const filteredOrders = filterOrdersByMonth(orders, month, year);
+      return (
+        !isNaN(orderDate.getTime()) && orderDate.getMonth() + 1 === monthNumber
+      );
+    });
 
-    // Convert orders data to a format suitable for Excel
+
+
     const data = filteredOrders.map((order) => ({
       "Número de orden": order.codGestion,
-      Email: order.email,
+      "Nombre del comprador": order.titular,
       Fecha: formatDate(order.createdAt),
       "Estado del envío": order.estado,
-      "Nombre del comprador": order.titular,
+      "Codigo de descuento": order.discountCode ? order.discountCode : "-",
+      Total: order.discountPrice ? order.discountPrice : order.total,
+      Productos: order.orderItems.map((item) => item.title).join(", "),
+      Email: order.email,
       DNI: order.dniTitular,
       celular: order.phone,
       Direccion: order.address,
@@ -259,59 +166,59 @@ export const TableOrders = ({ orders, password }) => {
       "Codigo postal": order.postalCode,
       Provincia: order.provincia,
     }));
-
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Orders");
-
-    // Generate buffer
-    const wbout = XLSX.write(workbook, { type: "array", bookType: "xlsx" });
-
-    // Create a Blob and download it
-    const blob = new Blob([wbout], { type: "application/octet-stream" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    const fechaActual = new Date();
-    const fechaFormateada = `${year}-${month + 1}-${fechaActual.getDate()}`;
-    link.download = `tiendaonfit-${fechaFormateada}.xlsx`;
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+    exportToExcel(data, `Tienda Onfit - ${new Date()}`);
+  }
+  const monthNames = [
+    "", // Index 0 - no month
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+  ];
   return (
     <div className="bg-slate-200">
       <div className="flex items-center justify-around py-10">
-        <Button className="my-10 text-white" onClick={handleExportSelected}>
-          Exportar Seleccionados a CSV
-        </Button>
         <div>
-          <Select onValueChange={(e) => selectMes(e)} value={mes}>
-            <SelectTrigger className="w-[180px]">Elije el mes</SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">Enero</SelectItem>
-              <SelectItem value="2">Febrero</SelectItem>
-              <SelectItem value="3">Marzo</SelectItem>
-              <SelectItem value="4">Abril</SelectItem>
-              <SelectItem value="5">Mayo</SelectItem>
-              <SelectItem value="6">Junio</SelectItem>
-              <SelectItem value="7">Julio</SelectItem>
-              <SelectItem value="8">Agosto</SelectItem>
-              <SelectItem value="9">Septiembre</SelectItem>
-              <SelectItem value="10">Octubre</SelectItem>
-              <SelectItem value="11">Noviembre</SelectItem>
-              <SelectItem value="12">Diciembre</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button
+          <div className="w-fit bg-white mb-5 rounded-xl">
+            <Select onValueChange={selectMes}>
+              <SelectTrigger className="w-[180px]">
+                {selectedMonth
+                  ? `${monthNames[selectedMonth]}`
+                  : "Elije el mes"}
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">Enero</SelectItem>
+                <SelectItem value="2">Febrero</SelectItem>
+                <SelectItem value="3">Marzo</SelectItem>
+                <SelectItem value="4">Abril</SelectItem>
+                <SelectItem value="5">Mayo</SelectItem>
+                <SelectItem value="6">Junio</SelectItem>
+                <SelectItem value="7">Julio</SelectItem>
+                <SelectItem value="8">Agosto</SelectItem>
+                <SelectItem value="9">Septiembre</SelectItem>
+                <SelectItem value="10">Octubre</SelectItem>
+                <SelectItem value="11">Noviembre</SelectItem>
+                <SelectItem value="12">Diciembre</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button onClick={()=>handleExport(selectedMonth)}>EXPORTAR A EXCEL</Button>
+          {/* <Button
             className="my-10 text-white"
             onClick={() =>
               handleExportSelectedToExcel(orders, Number(mes) - 1, 2024)
             }
           >
             Exportar a EXCEL
-          </Button>
+          </Button> */}
         </div>
         {password != "onfit" && (
           <Button

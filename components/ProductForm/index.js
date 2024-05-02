@@ -133,7 +133,7 @@ const ProductForm = ({ existingProduct }) => {
         formData.append("upload_preset", "ml_default");
 
         const response = await fetch(
-          "https://api.cloudinary.com/v1_1/dey28u2zn/image/upload",
+          "https://api.cloudinary.com/v1_1/dwtnrs4ix/image/upload",
           {
             method: "POST",
             body: formData,
@@ -160,21 +160,7 @@ const ProductForm = ({ existingProduct }) => {
 
   // Función ficticia para simular la carga de imágenes a Cloudinary
   // Deberías reemplazarla con tu lógica de carga real
-  const uploadToCloudinary = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "ml_default"); // Reemplaza 'your_preset_here' con tu preset de Cloudinary
-    // Cambia 'your_cloud_name' por tu nombre de cloud de Cloudinary en la URL
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dwtnrs4ix/image/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-    const data = await response.json();
-    setImagesArray(imagesArray.concat(data.secure_url));
-  };
+
   const removeImage = (index) => {
     setImagesArray((currentImages) =>
       currentImages.filter((_, i) => i !== index)
